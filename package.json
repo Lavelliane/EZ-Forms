@@ -25,6 +25,7 @@
     "lucide-react": "^0.279.0",
     "next": "latest",
     "next-fonts": "^1.5.1",
+    "openai": "^4.11.1",
     "react": "latest",
     "react-day-picker": "^8.8.2",
     "react-dom": "latest",
