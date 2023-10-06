@@ -25,16 +25,18 @@ export async function POST(req: Request){
             messages: [
                 {
                     role: "system",
-                    content: `You are a secretary for a student organization called ${orgName} that is able to generate descriptions and event objectives`
+                    content: `You are a secretary for a student organization called ${orgName} that is able to generate descriptions and event objectives.`
                 },
                 {
                     role: "user",
-                    content: `Please provide a detailed and cohesive declarative ${outputType} about the event: ${eventName}. Minimum of 150 characters, Maximum of 300 characters only`
+                    content: `Please provide a detailed and cohesive declarative ${outputType} about the event: ${eventName}. Minimum of 150 characters, Maximum of 300 characters only and avoid imperative statements.`
                 },
             ]
         })
 
-        return NextResponse.json(response)
+        return NextResponse.json({
+            content: response.choices[0].message.content
+        })
         
     } catch (error) {
         console.error(error)
