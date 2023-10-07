@@ -66,7 +66,7 @@ const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
 				side={'top'}
 				className='flex w-full h-screen justify-start items-start bg-purple-100 overflow-scroll text-[10px]'
 			>
-				<div ref={pdfRef} className='shadow-lg bg-white p-5'>
+				<div ref={pdfRef} className='bg-white p-5'>
 					<div className='w-[660px] h-fit bg-white relative'>
 						<div className='flex flex-col gap-1 absolute right-5'>
 							<p className='font-semibold border border-dark pb-2 px-2 pt-1 text-[11px]'>ACA – OSFA – SAS – 02F</p>

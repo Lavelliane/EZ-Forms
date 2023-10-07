@@ -44,7 +44,7 @@ const FormOne = () => {
 	const [date, setDate] = useState<Date>();
 	const [outputType, setOutputType] = useState<any>('');
 
-	const { mutate: generateFormOne } = useMutation({
+	const { mutate: generateFormOne, isLoading } = useMutation({
 		mutationFn: getFormOneFields,
 		onSuccess: (data) => {
 			if (outputType === 'description') {
@@ -572,7 +572,7 @@ const FormOne = () => {
 							''
 						)}
 						<Button
-							disabled={!form.activityName || !form.organizationName}
+							disabled={(!form.activityName || !form.organizationName) || isLoading}
 							type='submit'
 							onClick={async (e) => {
 								setOutputType('description');
@@ -584,7 +584,7 @@ const FormOne = () => {
 							}}
 							className='border border-purpleLight bg-transparent p-2 text-purpleLight  hover:bg-purpleLight hover:text-white transition-color'
 						>
-							<span className='mr-1'>CharmScript</span>
+							<span className='mr-1'>{isLoading ? 'Loading..' : 'CharmScript'}</span>
 							<IoSparklesOutline />
 						</Button>
 					</div>
@@ -605,7 +605,7 @@ const FormOne = () => {
 							''
 						)}
 						<Button
-							disabled={!form.activityName || !form.organizationName}
+							disabled={(!form.activityName || !form.organizationName) || isLoading}
 							type='submit'
 							onClick={async (e) => {
 								setOutputType('objective');
@@ -617,7 +617,7 @@ const FormOne = () => {
 							}}
 							className='border border-purpleLight bg-transparent p-2 text-purpleLight  hover:bg-purpleLight hover:text-white transition-color'
 						>
-							<span className='mr-1'>CharmScript</span>
+							<span className='mr-1'>{isLoading ? 'Loading..' : 'CharmScript'}</span>
 							<IoSparklesOutline />
 						</Button>
 					</div>
