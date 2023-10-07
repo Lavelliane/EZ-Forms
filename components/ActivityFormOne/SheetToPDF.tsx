@@ -163,17 +163,17 @@ const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
 									<Checkbox checked={formContent.involvement == 'organizer'} className='translate-y-1' />
 								</div>
 								<p className='flex w-full'>
+									Expected Number of Participant(s):{' '}
+									{formContent.involvement == 'organizer' && (
+										<span className='underline underline-offset-2 ml-1'>{formContent.numberOfParticipants}</span>
+									)}
+								</p>
+								<p className='flex w-full'>
 									Who are the expected participants:
 									<br />
 									<br />
 									{formContent.involvement == 'organizer' && (
 										<span className='underline underline-offset-2 ml-1'>{formContent.participants}</span>
-									)}
-								</p>
-								<p className='flex w-full'>
-									Expected Number of Participant(s):{' '}
-									{formContent.involvement == 'organizer' && (
-										<span className='underline underline-offset-2 ml-1'>{formContent.numberOfParticipants}</span>
 									)}
 								</p>
 							</div>
@@ -183,17 +183,17 @@ const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
 									<Checkbox checked={formContent.involvement == 'participant'} className='translate-y-1' />
 								</div>
 								<p className='flex w-full'>
+									Expected Number of Participant(s):{' '}
+									{formContent.involvement == 'participant' && (
+										<span className='underline underline-offset-2 ml-1'>{formContent.numberOfParticipants}</span>
+									)}
+								</p>
+								<p className='flex w-full'>
 									Who is the sponsoring organization/ office?:
 									<br />
 									<br />
 									{formContent.involvement == 'participant' && (
 										<span className='underline underline-offset-2 ml-1'>{formContent.sponsor}</span>
-									)}
-								</p>
-								<p className='flex w-full'>
-									Expected Number of Participant(s):{' '}
-									{formContent.involvement == 'participant' && (
-										<span className='underline underline-offset-2 ml-1'>{formContent.numberOfParticipants}</span>
 									)}
 								</p>
 							</div>
@@ -288,17 +288,6 @@ const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
 									{'>'} For off-campus activities outside Cebu secure signatures{' '}
 									<span className='font-semibold'>A,&#160;B&#160;&&#160;C</span>
 								</p>
-							</div>
-						</div>
-						<div>
-							<p className='font-semibold mt-1'>Attachment(s):</p>
-							<div className='pl-5'>
-								<p>1. Budget schedule and tentative program of activities/itinerary.</p>
-								<p>
-									2. List of Participants with corresponding Parent’s Permits for activities held outside the campus.
-								</p>
-								<p>3. Note of Commitment from the Faculty Adviser for activities held outside the school campus.</p>
-								<p>4. Speaker’s data (for symposia, lectures, fora, leadership trainings, seminar-workshops, etc.).</p>
 							</div>
 						</div>
 						<div>
