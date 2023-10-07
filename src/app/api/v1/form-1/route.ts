@@ -29,7 +29,7 @@ export async function POST(req: Request){
                 },
                 {
                     role: "user",
-                    content: `Please provide a detailed and cohesive declarative ${outputType} about the event: ${eventName}. Minimum of 150 characters, Maximum of 300 characters only and avoid imperative statements.`
+                    content: `What is ${eventName} all about? Please provide a detailed and cohesive declarative ${outputType}. Minimum of 150 characters, Maximum of 300 characters only and avoid imperative statements. Remove imperative statements like \'Join us..\'`
                 },
             ]
         })
