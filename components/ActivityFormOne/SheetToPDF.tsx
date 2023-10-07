@@ -41,14 +41,19 @@ const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
 			// Calculate the image dimensions and position
 			const imgWidth = pdfWidth; // Adjust for margins (10mm on each side)
 			const imgHeight = pdfHeight;
-			const imgX = 0; // 10mm left margin
 			const imgY = 0; // 10mm top margin
 
+			//ratio of image width based on height
+			const ratio = imgWidth / imgHeight + 0.1;
+
+			//margin to center image horizontally and vertically
+			const marginX = (pdfWidth - imgWidth * ratio) / 2;
+
 			// Add the image to the PDF with correct dimensions and position
-			pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth, imgHeight);
+			pdf.addImage(imgData, 'PNG', marginX, imgY, imgWidth * ratio, imgHeight);
 			setLoader(false);
 			// Save the PDF with the specified file name
-			pdf.save('download.pdf');
+			pdf.save('activity-form-1.pdf');
 		});
 	};
 

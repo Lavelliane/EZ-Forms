@@ -55,7 +55,6 @@ const FormOne = () => {
 		},
 	});
 
-	console.log(form);
 	const onCheckedCurricular = (e: any) => {
 		if (e.target.id === 'coCurricular') {
 			setIsCheckedCo(!isCheckedCo);
