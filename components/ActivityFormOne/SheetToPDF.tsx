@@ -202,10 +202,12 @@ const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
 							Name of the Activity:{' '}
 							<span className='underline underline-offset-2 ml-1'>{formContent.activityName}</span>
 						</p>
+						<br />
 						<p className='font-semibold mt-1'>
 							Short Description of the Activity:{' '}
 							<span className='underline underline-offset-2 ml-1'>{formContent.description}</span>
 						</p>
+						<br />
 						<p className='font-semibold mt-1'>
 							Objective/Purpose of the Activity:{' '}
 							<span className='underline underline-offset-2 ml-1'>{formContent.objective}</span>
