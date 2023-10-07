@@ -1,7 +1,7 @@
 // PDFGenerator.tsx
 
 import React from 'react';
-import * as html2pdf from 'html2pdf.js';
+import html2pdf from 'html2pdf.js';
 
 interface PDFGeneratorProps {
 	htmlContent: string;
