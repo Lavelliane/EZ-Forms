@@ -6,9 +6,9 @@ import Providers from "@/utils/provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "EZ Forms",
-  description: "Generate activity forms with ease",
-};
+  title: 'EZ-FORMS',
+  description: 'Generate | Print | Submit',
+}
 
 export default function RootLayout({
   children,

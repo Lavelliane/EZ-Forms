@@ -1,8 +1,7 @@
-
 type FormOneRequest = {
-    eventName: string;
-    orgName: string;
-    outputType: "description" | "objective";
-}
+	eventName: string;
+	orgName: string;
+	outputType: 'description' | 'objective';
+};
 
-export default FormOneRequest
+export default FormOneRequest;

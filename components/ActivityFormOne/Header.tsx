@@ -1,30 +1,21 @@
-import Image from 'next/image';
-import HeaderCheckbox from '../../public/assets/Header-Checkbox.png'
+import React from 'react';
+import CardSchool from '../CardSchool';
+import CardActivitySection from '../CardActivitySection';
+import FormOne from './FormOne';
 
 export default function Header() {
-  return (
-    <div className="flex flex-col items-center gap-4">
-      <div className='flex w-[1000px] items-center justify-between relative'>
-        <img
-          src="https://upload.wikimedia.org/wikipedia/en/3/39/University_of_San_Carlos_logo.png"
-          alt="USC Logo"
-          className="w-[100px] left-[45%] absolute"
-        />
-        <div className='flex-grow'></div>
-        <Image src={HeaderCheckbox} alt={'Header checkbox'} className='w-[200px]'/>
-      </div>
-      <div className="flex flex-col items-center">
-        <p>University of San Carlos</p>
-        <p>Cebu City</p>
-      </div>
-      <div className="flex flex-col items-center">
-        <p className="font-bold">STUDENT ACTIVITIES SECTION</p>
-        <p>Office of Student Formation and Activities</p>
-      </div>
-      <div className="flex flex-col items-center">
-        <p className="font-bold">ACTIVITY FORM 1</p>
-        <p>(General Activity Form for Student Organizations)</p>
-      </div>
-    </div>
-  );
+	return (
+		<div className='flex flex-col w-full'>
+			<div className='flex xl:flex-row flex-col items-start w-full gap-2 sm:mt-0 mt-20'>
+				<div className='flex xl:flex-col md:flex-row flex-col gap-4 w-full xl:w-fit xl:px-0 sm:pr-6 p-0 xl:fixed sm:ml-[90px]'>
+					<CardSchool />
+					<CardActivitySection />
+				</div>
+				<div className='flex-none w-[461px]'></div>
+				<div className='flex items-center justify-center w-full xl:px-6 sm:pr-6 p-0 xl:ml-0 sm:ml-[90px] m-0'>
+					<FormOne />
+				</div>
+			</div>
+		</div>
+	);
 }

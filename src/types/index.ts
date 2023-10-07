@@ -1,3 +1,4 @@
 import FormOneRequest from "./FormOneRequest"
+import IFormOne from './IFormOne';
 
-export type { FormOneRequest }
+export type { FormOneRequest, IFormOne }
