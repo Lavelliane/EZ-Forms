@@ -26,13 +26,14 @@ function CustomTimePicker({ id, value, onChange }: CustomTimePickerProps) {
 	const timeOptions = generateTimeOptions();
 
 	return (
-		<div className={cn('p-0')}>
+		<div className={cn('p-0 w-full')}>
 			<div className='flex justify-center relative items-center text-sm'>
 				<select
 					id={id}
 					className={cn('w-full p-2.5 border focus:outline-0 rounded-md')}
 					value={value}
 					onChange={(e) => onChange(e.target.value)}
+					style={{ maxHeight: '120px' }} // Set the maximum height here
 				>
 					{timeOptions.map((timeOption) => (
 						<option key={timeOption} value={timeOption}>

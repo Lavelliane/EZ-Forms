@@ -18,6 +18,7 @@ import SheetObjectiveGen from '../SheetObjectiveGen';
 import { Textarea } from '@/components/ui/textarea';
 import { IForm1Props } from '../../types';
 import { defaultForm1 } from '../../default';
+import SheetToPDF from './SheetToPDF';
 
 const FormOne = () => {
 	const [curricular, setCurricular] = React.useState('');
@@ -112,15 +113,15 @@ const FormOne = () => {
 		setForm({ ...form, ['semester']: e.target.id });
 	};
 
+	const onChange = (e: any) => {
+		setForm({ ...form, [e.target.id]: e.target.value });
+	};
+
 	useEffect(() => {
 		//set academic year to current year
 		const currentYear = new Date().getFullYear();
 		setAcademicYear(currentYear + '-' + (currentYear + 1));
 	}, []);
-
-	const onChange = (e: any) => {
-		setForm({ ...form, [e.target.id]: e.target.value });
-	};
 
 	useEffect(() => {
 		const dateString = date?.toString();
@@ -137,10 +138,10 @@ const FormOne = () => {
 
 	useEffect(() => {
 		const natureForm = [
-			isCheckedScientia && 'Scientia',
-			isCheckedVirtus && 'Virtus',
-			isCheckedDevotio && 'Devotio',
-			isCheckedOrganization && 'Organization',
+			isCheckedScientia && 'scientia',
+			isCheckedVirtus && 'virtus',
+			isCheckedDevotio && 'devotio',
+			isCheckedOrganization && 'organization',
 		]
 			.filter(Boolean)
 			.join(', ');
@@ -149,7 +150,7 @@ const FormOne = () => {
 	}, [isCheckedScientia, isCheckedVirtus, isCheckedDevotio, isCheckedOrganization]);
 
 	return (
-		<Card className='flex flex-grow flex-col bg-white hover:shadow-md transition-shadow w-fit h-fit z-10 py-10 px-8'>
+		<Card className='flex flex-grow flex-col bg-white hover:shadow-md transition-shadow w-fit h-fit z-10 py-4 sm:px-8 px-0'>
 			<CardHeader className='text-center'>
 				<h4 className='text-base text-dark font-bold leading-none'>ACTIVITY FORM 1</h4>
 				<CardDescription className='text-gray-600'>(General Activity Form for Student Organizations)</CardDescription>
@@ -168,7 +169,7 @@ const FormOne = () => {
 							className='w-28 text-center text-sm'
 						/>
 					</div>
-					<div id='academicYear' className='flex gap-2 items-center'>
+					<div id='academicYear' className='flex sm:flex-row flex-col gap-2 sm:items-center'>
 						<div className='flex gap-2 items-end'>
 							<Checkbox
 								id='firstSem'
@@ -186,7 +187,7 @@ const FormOne = () => {
 								</label>
 							</div>
 						</div>
-						<div className=' text-slate-300 font-thin'>|</div>
+						<div className=' text-slate-300 font-thin sm:block hidden'>|</div>
 						<div className='flex gap-2 items-end'>
 							<Checkbox
 								id='secondSem'
@@ -204,7 +205,7 @@ const FormOne = () => {
 								</label>
 							</div>
 						</div>
-						<div className=' text-slate-300 font-thin'>|</div>
+						<div className=' text-slate-300 font-thin sm:block hidden'>|</div>
 						<div className='flex gap-2 items-end'>
 							<Checkbox
 								id='summerSem'
@@ -225,13 +226,13 @@ const FormOne = () => {
 					</div>
 				</div>
 				<Separator className='my-2' />
-				<div className='flex flex-row justify-center gap-10 items-end'>
-					<div className='grid w-full max-w-sm items-center gap-1.5'>
+				<div className='flex sm:flex-row flex-col justify-center gap-10 sm:items-end items-center'>
+					<div className='grid w-full sm:max-w-sm items-center gap-1.5'>
 						<Label htmlFor='organizationName'>Organization Name</Label>
 						<Input type='text' id='organizationName' placeholder='Enter name of organization' onChange={onChange} />
 					</div>
-					<div className='flex flex-1 w-full max-w-sm items-center h-10'>
-						<div className='flex items-center w-full justify-between'>
+					<div className='flex flex-1 w-full sm:max-w-sm items-center h-10'>
+						<div className='flex items-center w-full justify-evenly gap-1'>
 							<div className='flex gap-2 items-end'>
 								<Checkbox
 									id='coCurricular'
@@ -271,21 +272,21 @@ const FormOne = () => {
 					</div>
 				</div>
 				<div
-					className={`flex flex-row justify-center gap-10 items-center transition-transform ${
+					className={`flex sm:flex-row flex-col justify-center sm:gap-10 gap-4 items-center transition-transform ${
 						isCheckedCo ? '' : 'hidden'
 					}`}
 				>
-					<div className='grid w-full max-w-sm items-center gap-1.5'>
+					<div className='grid w-full sm:max-w-sm items-center gap-1.5'>
 						<Label htmlFor='department'>Department</Label>
 						<Input type='text' id='department' placeholder='Enter name of department' onChange={onChange} />
 					</div>
-					<div className='grid w-full max-w-sm items-center gap-1.5'>
+					<div className='grid w-full sm:max-w-sm items-center gap-1.5'>
 						<Label htmlFor='school'>School</Label>
 						<Input type='text' id='school' placeholder='Enter name of school/college' onChange={onChange} />
 					</div>
 				</div>
-				<div className='flex flex-1 flex-row justify-center gap-10 items-center'>
-					<div className='grid w-full max-w-sm items-center gap-1.5 mx-0'>
+				<div className='flex sm:flex-row flex-col justify-center sm:gap-10 gap-4 items-center'>
+					<div className='grid w-full sm:max-w-sm items-center gap-1.5'>
 						<Label htmlFor='date'>Date of Activity</Label>
 						<Popover>
 							<PopoverTrigger asChild>
@@ -302,25 +303,25 @@ const FormOne = () => {
 							</PopoverContent>
 						</Popover>
 					</div>
-					<div className='flex flex-1 flex-row justify-evenly items-center'>
-						<div className='flex flex-col w-full items-start justify-start gap-1.5 mx-0'>
+					<div className='flex flex-1 w-full sm:max-w-sm items-center gap-4'>
+						<div className='flex flex-col w-full min-w-[118px] items-start justify-start gap-1.5'>
 							<Label htmlFor='startTime'>Start Time</Label>
 							<CustomTimePicker id='startTime' value={startTime} onChange={(newValue) => setStartTime(newValue)} />
 						</div>
-						<div className='flex flex-col w-full items-start justify-start gap-1.5 mx-0'>
+						<div className='flex flex-col w-full min-w-[118px] items-start justify-start gap-1.5'>
 							<Label htmlFor='endTime'>End Time</Label>
 							<CustomTimePicker id='endTime' value={endTime} onChange={(newValue) => setEndTime(newValue)} />
 						</div>
 					</div>
 				</div>
-				<div className='flex flex-row justify-center gap-10 items-end'>
-					<div className='grid w-full max-w-sm items-center gap-1.5'>
+				<div className='flex sm:flex-row flex-col justify-center sm:gap-10 gap-4 sm:items-end items-center'>
+					<div className='grid w-full sm:max-w-sm items-center gap-1.5'>
 						<Label htmlFor='school'>Venue</Label>
 						<Input type='text' id='school' placeholder='Enter name of venue' onChange={onChange} />
 					</div>
-					<div className='flex flex-1 w-full max-w-sm items-center h-10'>
-						<div className='flex items-center w-full justify-evenly'>
-							<div className='flex gap-2 items-end'>
+					<div className='flex flex-1 sm:max-w-sm items-center h-10'>
+						<div className='flex items-center w-full justify-evenly gap-1'>
+							<div className='flex gap-2 items-end min-w-[118px]'>
 								<Checkbox
 									id='inCampus'
 									checked={isCheckedIn}
@@ -338,7 +339,7 @@ const FormOne = () => {
 								</div>
 							</div>
 							<div className=' text-slate-300 font-thin'>|</div>
-							<div className='flex gap-2 items-end'>
+							<div className='flex gap-2 items-end  min-w-[118px]'>
 								<Checkbox
 									id='offCampus'
 									checked={isCheckedOff}
@@ -358,18 +359,18 @@ const FormOne = () => {
 						</div>
 					</div>
 				</div>
-				<div className='flex flex-row justify-center gap-10 items-end'>
-					<div className='grid w-full max-w-sm items-start gap-1.5'>
+				<div className='flex sm:flex-row flex-col justify-center sm:gap-10 gap-4 sm:items-end items-center'>
+					<div className='grid w-full md:sm:max-w-sm items-center gap-1.5'>
 						<Label htmlFor='activityName'>Activity Name</Label>
 						<Input type='text' id='activityName' placeholder='Enter name of the activity' onChange={onChange} />
 					</div>
-					<div className='flex flex-1 w-full max-w-sm items-center h-10'></div>
+					<div className='md:flex hidden flex-1 sm:max-w-sm items-center h-10'></div>
 				</div>
 				<Separator className='my-2' />
 				<div className='flex flex-col w-full gap-2 items-center justify-center'>
 					<h4 className='font-semibold text-center'>Nature&#160;of&#160;Activity</h4>
-					<div id='natureOfActivity' className='flex gap-2 items-center'>
-						<div className='flex gap-2 items-end'>
+					<div id='natureOfActivity' className='flex sm:flex-row flex-col gap-2 items-center justify-center w-full'>
+						<div className='flex gap-2 items-center'>
 							<Checkbox
 								id='scientia'
 								checked={isCheckedScientia}
@@ -390,9 +391,8 @@ const FormOne = () => {
 						chosen field of study.'
 								/>
 							</div>
-						</div>
-						<div className=' text-slate-300 font-thin'>|</div>
-						<div className='flex gap-2 items-end'>
+							<div className=' text-slate-300 font-thin'>|</div>
+
 							<Checkbox
 								id='virtus'
 								checked={isCheckedVirtus}
@@ -413,8 +413,8 @@ const FormOne = () => {
 								/>
 							</div>
 						</div>
-						<div className=' text-slate-300 font-thin'>|</div>
-						<div className='flex gap-2 items-end'>
+						<div className=' text-slate-300 font-thin sm:block hidden'>|</div>
+						<div className='flex gap-2 items-center'>
 							<Checkbox
 								id='devotio'
 								checked={isCheckedDevotio}
@@ -434,9 +434,7 @@ const FormOne = () => {
 									description="Activities that addresses prevailing social realities, activates one's kindness, compassion, service, being philanthropic etc., allows one to volunteer one's expertise, and gives back valued contribution to others or the community."
 								/>
 							</div>
-						</div>
-						<div className=' text-slate-300 font-thin'>|</div>
-						<div className='flex gap-2 items-end'>
+							<div className=' text-slate-300 font-thin'>|</div>
 							<Checkbox
 								id='organization'
 								checked={isCheckedOrganization}
@@ -461,15 +459,16 @@ const FormOne = () => {
 				</div>
 				<Separator className='mt-2' />
 				<h4
-					className={`transition-transform font-semibold text-center translate-y-8 z-10 ${
-						isCheckedOrganizer ? '-translate-x-[25%]' : ''
-					} ${isCheckedParticipant ? 'translate-x-[25%]' : ''}`}
+					className={`transition-transform font-semibold self-center w-fit sm:translate-y-8 z-10
+					${isCheckedOrganizer && !isCheckedParticipant ? 'sm:-translate-x-[70%]' : ''} ${
+						isCheckedParticipant && !isCheckedOrganizer ? 'sm:translate-x-[70%]' : ''
+					}`}
 				>
 					Nature&#160;of&#160;Involvement
 				</h4>
-				<div className='flex flex-row justify-center gap-6 items-center'>
+				<div className='flex sm:flex-row flex-col justify-center sm:gap-6 gap-2 items-center'>
 					<div
-						className={`-translate-y-5 flex flex-col px-5 pb-5 pt-14 gap-4 w-full h-fit rounded-lg transition-colors ${
+						className={`-translate-y-5 flex flex-col px-5 pb-5 sm:pt-14 pt-5 gap-4 w-full h-fit rounded-lg transition-colors ${
 							isCheckedOrganizer ? 'bg-purple-100' : ''
 						}`}
 					>
@@ -490,16 +489,16 @@ const FormOne = () => {
 								</label>
 							</div>
 						</div>
-						<div className='grid w-full  max-w-sm items-center gap-1.5'>
-							<Label htmlFor='expectedParticipants'>Expected Participants</Label>
+						<div className='grid w-full sm:max-w-sm items-center gap-1.5'>
+							<Label htmlFor='participants'>Expected Participants</Label>
 							<Input
 								type='text'
-								id='expectedParticipants'
+								id='participants'
 								placeholder='Who are the expected participants?'
 								onChange={onChange}
 							/>
 						</div>
-						<div className='grid w-full max-w-sm items-center gap-1.5'>
+						<div className='grid w-full sm:max-w-sm items-center gap-1.5'>
 							<Label htmlFor='numberOfParticipants'>Number of Participants</Label>
 							<Input
 								type='number'
@@ -510,7 +509,7 @@ const FormOne = () => {
 						</div>
 					</div>
 					<div
-						className={`-translate-y-5 flex flex-col px-4 pb-4 pt-14 gap-4 w-full h-fit rounded-lg transition-colors ${
+						className={`-translate-y-5 flex flex-col px-5 pb-5 sm:pt-14 pt-5 gap-4 w-full h-fit rounded-lg transition-colors ${
 							isCheckedParticipant ? 'bg-purple-100' : ''
 						}`}
 					>
@@ -531,16 +530,16 @@ const FormOne = () => {
 								</label>
 							</div>
 						</div>
-						<div className='grid w-full  max-w-sm items-center gap-1.5'>
-							<Label htmlFor='sponsoringOrganization'>Sponsoring Organization</Label>
+						<div className='grid w-full sm:max-w-sm items-center gap-1.5'>
+							<Label htmlFor='sponsor'>Sponsoring Organization</Label>
 							<Input
 								type='text'
-								id='sponsoringOrganization'
+								id='sponsor'
 								placeholder='Who is the sponsoring organization/office?'
 								onChange={onChange}
 							/>
 						</div>
-						<div className='grid w-full max-w-sm items-center gap-1.5'>
+						<div className='grid w-full sm:max-w-sm items-center gap-1.5'>
 							<Label htmlFor='numberOfParticipants'>Number of Participants</Label>
 							<Input
 								type='number'
@@ -551,7 +550,7 @@ const FormOne = () => {
 						</div>
 					</div>
 				</div>
-				<div className='flex flex-row items-center justify-center gap-6 w-full'>
+				<div className='flex sm:flex-row flex-col items-center justify-center gap-6 w-full'>
 					<div className='w-full flex flex-col gap-4 border items-start border-purple-100 rounded-lg p-6 focus-within:shadow-md transition-shadow'>
 						<div className='flex flex-row items-center gap-4'>
 							<h4 className='font-semibold text-center'>Description of the Activity</h4>
@@ -567,18 +566,16 @@ const FormOne = () => {
 						<SheetObjectiveGen />
 					</div>
 				</div>
-
 				<Separator className='my-4' />
-
 				<div className='flex flex-col items-center justify-evenly w-full '>
 					<h4 className='font-semibold text-center'>Signatories</h4>
-					<div className='flex w-full gap-4 mt-4'>
+					<div className='flex sm:flex-row flex-col w-full gap-4 mt-4'>
 						<div className='rounded-lg bg-purple-100 p-4 text-dark w-full hover:shadow-md focus-within:shadow-md transition-shadow'>
-							<label htmlFor='presidentName' className='text-sm font-medium leading-none'>
+							<label htmlFor='recommendedBy' className='text-sm font-medium leading-none'>
 								Recommended&#160;by:
 							</label>
 							<Input
-								id='presidentName'
+								id='recommendedBy'
 								placeholder='Enter complete name'
 								className='rounded-none border-t-0 border-x-0 border-gray-400 bg-transparent text-dark text-sm font-medium leading-none focus-visible:bg-transparent'
 								onChange={onChange}
@@ -588,11 +585,11 @@ const FormOne = () => {
 							</p>
 						</div>
 						<div className='rounded-lg bg-purple-100 p-4 text-dark w-full hover:shadow-md focus-within:shadow-md transition-shadow'>
-							<label htmlFor='facultyAdviserName' className='text-sm font-medium leading-none'>
+							<label htmlFor='endorsedBy' className='text-sm font-medium leading-none'>
 								Endorsed&#160;by:
 							</label>
 							<Input
-								id='facultyAdviserName'
+								id='endorsedBy'
 								placeholder='Enter complete name'
 								className='rounded-none border-t-0 border-x-0 border-gray-400 bg-transparent text-dark text-sm font-medium leading-none focus-visible:bg-transparent'
 								onChange={onChange}
@@ -600,11 +597,11 @@ const FormOne = () => {
 							<p className='text-xs font-medium leading-none justify-center mt-2 text-center'>Faculty-Adviser</p>
 						</div>
 						<div className='rounded-lg bg-purple-100 p-4 text-dark w-full hover:shadow-md focus-within:shadow-md transition-shadow'>
-							<label htmlFor='deanName' className='text-sm font-medium leading-none'>
+							<label htmlFor='notedBy' className='text-sm font-medium leading-none'>
 								Noted&#160;by:
 							</label>
 							<Input
-								id='deanName'
+								id='notedBy'
 								placeholder='Enter complete name'
 								className='rounded-none border-t-0 border-x-0 border-gray-400 bg-transparent text-dark text-sm font-medium leading-none focus-visible:bg-transparent'
 								onChange={onChange}
@@ -626,7 +623,7 @@ const FormOne = () => {
 					<Button variant={'outline'} type='button'>
 						Reset
 					</Button>
-					<Button type='submit'>Submit</Button>
+					<SheetToPDF formContent={form} />
 				</div>
 			</CardContent>
 		</Card>

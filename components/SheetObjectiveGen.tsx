@@ -33,13 +33,13 @@ const SheetObjectiveGen = () => {
 						<Label htmlFor='sample' className='text-right'>
 							Sample
 						</Label>
-						<Input id='sample' value='this is a sample keyword' className='col-span-3' />
+						<Input id='sample' defaultValue='this is a sample keyword' className='col-span-3' />
 					</div>
 					<div className='grid grid-cols-4 items-center gap-4'>
 						<Label htmlFor='sample' className='text-right'>
 							Sample
 						</Label>
-						<Input id='sample' value='this is a sample keyword' className='col-span-3' />
+						<Input id='sample' defaultValue='this is a sample keyword' className='col-span-3' />
 					</div>
 				</div>
 				<SheetFooter>

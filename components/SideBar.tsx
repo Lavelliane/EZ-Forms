@@ -7,13 +7,25 @@ import { LuWorkflow, LuSettings } from 'react-icons/lu';
 import { HiOutlineUserGroup, HiOutlineLogout } from 'react-icons/hi';
 import logo from '../public/assets/ez-forms-logo.svg';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Button } from '@/components/ui/button';
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
+import TopBar from './TopBar';
 
 const SideBar = () => {
 	const pathname = usePathname();
 	return (
-		<ul className='z-10 flex flex-col gap-2 bg-dark text-grayLight text-xl items-center justify-start h-full w-16 py-4 rounded-2xl shadow-md'>
+		<ul className='z-10 flex sm:flex-col flex-row sm:gap-2 gap-0 bg-dark text-grayLight text-xl items-center sm:justify-start justify-evenly sm:h-full sm:w-16 h-16 w-full py-4 rounded-2xl shadow-md'>
 			<li>
-				<Image src={logo} alt={'ez-forms-logo'} className=' invert px-4 py-2 mb-6' />
+				<Popover>
+					<PopoverTrigger asChild>
+						<Button className='p-1 sm:mb-6 bg-transparent hover:bg-transparent items-center'>
+							<Image src={logo} alt={'ez-forms-logo'} className=' invert w-fit h-full' />
+						</Button>
+					</PopoverTrigger>
+					<PopoverContent side={'right'} className='sm:w-fit w-fit h-fit pt-4 px-4 pb-0 sm:my-0 mt-20 sm:ml-4 -ml-14'>
+						<TopBar />
+					</PopoverContent>
+				</Popover>
 			</li>
 			<TooltipProvider>
 				<Tooltip>
@@ -70,7 +82,7 @@ const SideBar = () => {
 						List of Participants
 					</TooltipContent>
 				</Tooltip>
-				<div className='h-full'></div>
+				<div className='h-full w-full sm:flex hidden'></div>
 				<Tooltip>
 					<TooltipTrigger>
 						<li>

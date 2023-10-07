@@ -16,9 +16,9 @@ const SheetApprovalGuide = () => {
 	return (
 		<Sheet>
 			<SheetTrigger asChild>
-				<Button>Approval&#160;Guide</Button>
+				<Button className='w-[136px]'>Approval&#160;Guide</Button>
 			</SheetTrigger>
-			<SheetContent>
+			<SheetContent className='overflow-y-scroll'>
 				<SheetHeader>
 					<SheetTitle>Approval Guide</SheetTitle>
 					<SheetDescription>List of required signature for an activity.</SheetDescription>

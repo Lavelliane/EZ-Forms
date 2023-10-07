@@ -13,40 +13,48 @@ import {
 } from '@/components/ui/navigation-menu';
 import SheetAttachments from './SheetAttachments';
 import SheetApprovalGuide from './SheetApprovalGuide';
+import SheetEzForms from './SheetEzForms';
+import SheetDevTeam from './SheetDevTeam';
 
 const aboutUs: { name: string; description: string }[] = [
 	{
 		name: 'Jhury Kevin Lastre',
-		description: 'BS-CPE IV',
+		description: 'Backend developer',
 	},
 	{
 		name: 'Vincent Abella',
-		description: 'BS-CPE IV',
+		description: 'Frontend developer',
+	},
+	{
+		name: 'Johnfil Initan',
+		description: 'Q&A tester',
 	},
 ];
 
 export default function TopBar() {
 	return (
-		<NavigationMenu className='mb-4'>
-			<NavigationMenuList>
-				<NavigationMenuItem>
-					<NavigationMenuTrigger>Getting started</NavigationMenuTrigger>
-					<NavigationMenuContent>
-						<ul className='grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]'>
-							<li className='row-span-3 px-4 text-center justify-center pt-6 rounded-md bg-gradient-to-b from-purple-50 to-purple-100 p-6'>
-								<Image src={logo} alt='ez-forms logo' />
-								<h2 className='font-bold text-xl mt-2'>EZ-FORMS</h2>
+		<NavigationMenu className='mb-4 z-20 h-fit w-fit'>
+			<NavigationMenuList className='flex sm:flex-row sm:gap-0 gap-2 flex-col items-center'>
+				<NavigationMenuItem className='sm:block hidden'>
+					<NavigationMenuTrigger className='w-[136px]'>EZ-FORMS</NavigationMenuTrigger>
+					<NavigationMenuContent className='w-full'>
+						<ul className='flex flex-row p-6 w-[500px] items-center justify-center'>
+							<li className='flex flex-col w-full p-4 text-center justify-center items-center rounded-md bg-gradient-to-b from-purple-50 to-purple-100'>
+								<Image src={logo} alt='ez-forms logo' className='w-24 h-40' />
+								<h2 className='font-bold text-xl'>EZ-FORMS</h2>
 								<p className='font-light text-xs'>Generate&#160;|&#160;Print&#160;|&#160;Submit</p>
 							</li>
-							<ListItem title='Form-1'>Fill-up and generate the Activity Form 1.</ListItem>
-							<ListItem title='Attachments'>Generate an AI-driven sprogram flow.</ListItem>
-							<ListItem title='Listings'>Store a copy of the list of participants.</ListItem>
+							<div className='w-full flex flex-col'>
+								<ListItem title='Form-1'>Fill-up and generate the Activity Form 1.</ListItem>
+								<ListItem title='Attachments'>Generate an AI-driven program flow.</ListItem>
+								<ListItem title='Listings'>Store a copy of the list of participants.</ListItem>
+							</div>
 						</ul>
 					</NavigationMenuContent>
 				</NavigationMenuItem>
-				<NavigationMenuItem>
-					<NavigationMenuTrigger>DevTeam</NavigationMenuTrigger>
-					<NavigationMenuContent>
+				<NavigationMenuItem className='sm:block hidden'>
+					<NavigationMenuTrigger className='w-[136px]'>DevTeam</NavigationMenuTrigger>
+					<NavigationMenuContent className='w-full'>
 						<ul className='grid w-[320px] gap-3 p-4 md:w-[420px] md:grid-cols-2 lg:w-[520px] '>
 							{aboutUs.map((us) => (
 								<ListItem key={us.name} title={us.name}>
@@ -55,6 +63,12 @@ export default function TopBar() {
 							))}
 						</ul>
 					</NavigationMenuContent>
+				</NavigationMenuItem>
+				<NavigationMenuItem className='block sm:hidden'>
+					<SheetEzForms />
+				</NavigationMenuItem>
+				<NavigationMenuItem className='block sm:hidden'>
+					<SheetDevTeam />
 				</NavigationMenuItem>
 				<NavigationMenuItem>
 					<SheetAttachments />
