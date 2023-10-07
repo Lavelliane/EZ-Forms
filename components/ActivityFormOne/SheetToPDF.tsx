@@ -7,9 +7,10 @@ import {
 	SheetTrigger,
 	SheetTitle,
 	SheetFooter,
+	SheetClose,
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import { IForm1Props } from '../../types';
+import { IFormOne } from '@/types';
 import { Checkbox } from '@/components/ui/checkbox';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -17,7 +18,7 @@ import Image from 'next/image';
 import SchoolLogo from '../../public/assets/University_of_San_Carlos_logo.svg';
 
 type SheetToPDFProps = {
-	formContent: IForm1Props;
+	formContent: IFormOne;
 };
 
 const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
@@ -228,7 +229,7 @@ const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
 								<div>
 									<p>1. Recommended by: </p>
 									<br />
-									<div className='border-b border-dark'>
+									<div className='border-b border-dark pb-1'>
 										<p className='text-center'>{formContent.recommendedBy}</p>
 									</div>
 									<p>President of the Student Organization</p>
@@ -237,7 +238,7 @@ const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
 								<div>
 									<p>2. Endorsed by: </p>
 									<br />
-									<div className='border-b border-dark'>
+									<div className='border-b border-dark pb-1'>
 										<p className='text-center'>{formContent.endorsedBy}</p>
 									</div>
 									<p>Faculty – Adviser</p>
@@ -246,7 +247,7 @@ const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
 								<div>
 									<p>3. Noted by: </p>
 									<br />
-									<div className='border-b border-dark'>
+									<div className='border-b border-dark pb-1'>
 										<p className='text-center'>{formContent.notedBy}</p>
 									</div>
 									<p>Dean/Department Chair</p>
@@ -256,11 +257,17 @@ const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
 							<div className='font-semibold w-full'>
 								<p>{'4. Approved by:'}</p>
 								<div className='h-full flex flex-col'>
-									<p className='mt-5'>a.) ______________________________________</p>
+									<p className='mt-5'>
+										a.) <span className='ml-5 w-3/4 border-b border-dark flex'></span>
+									</p>
 									<p>Student Activities Officer</p>
-									<p className='mt-5'>b.) ______________________________________</p>
+									<p className='mt-5'>
+										b.)<span className='ml-5 w-3/4 border-b border-dark flex'></span>
+									</p>
 									<p>Head, Office of Student Formation & Activities</p>
-									<p className='mt-5'>c.) ______________________________________</p>
+									<p className='mt-5'>
+										c.)<span className='ml-5 w-3/4 border-b border-dark flex'></span>
+									</p>
 									<p>Director, Student Affairs & Services Office</p>
 								</div>
 							</div>
@@ -327,8 +334,12 @@ const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
 						<p>Revision 4: Effective January 29, 2021</p>
 					</div>
 				</div>
-
-				<Button onClick={downloadPDF}>Download</Button>
+				<div className='flex flex-col gap-2 md:relative absolute md:m-0 m-4'>
+					<Button onClick={downloadPDF}>Download</Button>
+					<SheetClose asChild>
+						<Button>Close</Button>
+					</SheetClose>
+				</div>
 			</SheetContent>
 		</Sheet>
 	);

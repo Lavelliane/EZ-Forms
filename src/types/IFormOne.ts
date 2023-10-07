@@ -1,6 +1,6 @@
 //form-1 types
 
-export interface IForm1Props {
+export default interface IFormOne {
 	academicYear: string;
 	semester: string;
 	organizationName: string;

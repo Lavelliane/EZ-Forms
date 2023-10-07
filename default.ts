@@ -1,7 +1,7 @@
 //form-1 default
-import { IForm1Props } from './types';
+import { IFormOne, FormOneRequest } from '@/types';
 
-export const defaultForm1: IForm1Props = {
+export const defaultForm1: IFormOne = {
 	academicYear: '',
 	semester: '',
 	organizationName: '',

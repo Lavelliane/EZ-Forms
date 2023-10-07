@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -16,39 +16,47 @@ import { cn } from '@/lib/utils';
 import SheetDescriptionGen from '../SheetDescriptionGen';
 import SheetObjectiveGen from '../SheetObjectiveGen';
 import { Textarea } from '@/components/ui/textarea';
-import { IForm1Props } from '../../types';
+import { IFormOne, FormOneRequest } from '@/types';
 import { defaultForm1 } from '../../default';
 import SheetToPDF from './SheetToPDF';
+import { IoSparklesOutline } from 'react-icons/io5';
+import { useMutation } from '@tanstack/react-query';
+import getFormOneFields from '@/mutations/getFormOneFields';
 
 const FormOne = () => {
-	const [curricular, setCurricular] = React.useState('');
-	const [campus, setCampus] = React.useState('');
-	const [involvement, setInvolvement] = React.useState('');
-	const [nature, setNature] = React.useState('');
-	const [semester, setSemester] = React.useState([]);
-	const [form, setForm] = React.useState<IForm1Props>(defaultForm1);
-	const [academicYear, setAcademicYear] = React.useState('');
-	const [onInputChange, setOnInputChange] = React.useState('');
-	const [isCheckedCo, setIsCheckedCo] = React.useState(false);
-	const [isCheckedExtra, setIsCheckedExtra] = React.useState(false);
-	const [isCheckedIn, setIsCheckedIn] = React.useState(false);
-	const [isCheckedOff, setIsCheckedOff] = React.useState(false);
-	const [isCheckedScientia, setIsCheckedScientia] = React.useState(false);
-	const [isCheckedVirtus, setIsCheckedVirtus] = React.useState(false);
-	const [isCheckedDevotio, setIsCheckedDevotio] = React.useState(false);
-	const [isCheckedOrganization, setIsCheckedOrganization] = React.useState(false);
-	const [isCheckedOrganizer, setIsCheckedOrganizer] = React.useState(false);
-	const [isCheckedParticipant, setIsCheckedParticipant] = React.useState(false);
-	const [isCheckedFirstSem, setIsCheckedFirstSem] = React.useState(false);
-	const [isCheckedSecondSem, setIsCheckedSecondSem] = React.useState(false);
-	const [isCheckedSummerSem, setIsCheckedSummerSem] = React.useState(false);
-	const [startTime, setStartTime] = React.useState('');
-	const [endTime, setEndTime] = React.useState('');
-	const [date, setDate] = React.useState<Date>();
+	const [form, setForm] = useState<IFormOne>(defaultForm1);
+	const [academicYear, setAcademicYear] = useState('');
+	const [isCheckedCo, setIsCheckedCo] = useState(false);
+	const [isCheckedExtra, setIsCheckedExtra] = useState(false);
+	const [isCheckedIn, setIsCheckedIn] = useState(false);
+	const [isCheckedOff, setIsCheckedOff] = useState(false);
+	const [isCheckedScientia, setIsCheckedScientia] = useState(false);
+	const [isCheckedVirtus, setIsCheckedVirtus] = useState(false);
+	const [isCheckedDevotio, setIsCheckedDevotio] = useState(false);
+	const [isCheckedOrganization, setIsCheckedOrganization] = useState(false);
+	const [isCheckedOrganizer, setIsCheckedOrganizer] = useState(false);
+	const [isCheckedParticipant, setIsCheckedParticipant] = useState(false);
+	const [isCheckedFirstSem, setIsCheckedFirstSem] = useState(false);
+	const [isCheckedSecondSem, setIsCheckedSecondSem] = useState(false);
+	const [isCheckedSummerSem, setIsCheckedSummerSem] = useState(false);
+	const [startTime, setStartTime] = useState('');
+	const [endTime, setEndTime] = useState('');
+	const [date, setDate] = useState<Date>();
+	const [outputType, setOutputType] = useState<any>('');
+
+	const { mutate: generateFormOne } = useMutation({
+		mutationFn: getFormOneFields,
+		onSuccess: (data) => {
+			if (outputType === 'description') {
+				setForm({ ...form, ['description']: data });
+			} else if (outputType === 'objective') {
+				setForm({ ...form, ['objective']: data });
+			}
+		},
+	});
 
 	console.log(form);
 	const onCheckedCurricular = (e: any) => {
-		setCurricular(e.target.id);
 		if (e.target.id === 'coCurricular') {
 			setIsCheckedCo(!isCheckedCo);
 			setIsCheckedExtra(false);
@@ -60,7 +68,6 @@ const FormOne = () => {
 	};
 
 	const onCheckedCampus = (e: any) => {
-		setCampus(e.target.id);
 		if (e.target.id === 'inCampus') {
 			setIsCheckedIn(!isCheckedIn);
 			setIsCheckedOff(false);
@@ -72,7 +79,6 @@ const FormOne = () => {
 	};
 
 	const onCheckedInvolvement = (e: any) => {
-		setInvolvement(e.target.id);
 		if (e.target.id === 'organizer') {
 			setIsCheckedOrganizer(!isCheckedOrganizer);
 			setIsCheckedParticipant(false);
@@ -96,7 +102,6 @@ const FormOne = () => {
 	};
 
 	const onCheckedSemester = (e: any) => {
-		setSemester(e.target.id);
 		if (e.target.id === 'firstSem') {
 			setIsCheckedFirstSem(!isCheckedFirstSem);
 			setIsCheckedSecondSem(false);
@@ -316,8 +321,8 @@ const FormOne = () => {
 				</div>
 				<div className='flex sm:flex-row flex-col justify-center sm:gap-10 gap-4 sm:items-end items-center'>
 					<div className='grid w-full sm:max-w-sm items-center gap-1.5'>
-						<Label htmlFor='school'>Venue</Label>
-						<Input type='text' id='school' placeholder='Enter name of venue' onChange={onChange} />
+						<Label htmlFor='venue'>Venue</Label>
+						<Input type='text' id='venue' placeholder='Enter name of venue' onChange={onChange} />
 					</div>
 					<div className='flex flex-1 sm:max-w-sm items-center h-10'>
 						<div className='flex items-center w-full justify-evenly gap-1'>
@@ -555,15 +560,67 @@ const FormOne = () => {
 						<div className='flex flex-row items-center gap-4'>
 							<h4 className='font-semibold text-center'>Description of the Activity</h4>
 						</div>
-						<Textarea id='description' className='resize-none' onChange={onChange} />
-						<SheetDescriptionGen />
+						<Textarea
+							placeholder='Enter short description or auto-generate with CharmScript...'
+							id='description'
+							className='resize-none'
+							onChange={onChange}
+							value={form.description || ''}
+						/>
+						{!form.activityName || !form.organizationName ? (
+							<p className=' text-red-500 text-xs'>Organization and activity names required.</p>
+						) : (
+							''
+						)}
+						<Button
+							disabled={!form.activityName || !form.organizationName}
+							type='submit'
+							onClick={async (e) => {
+								setOutputType('description');
+								await generateFormOne({
+									eventName: form.activityName,
+									orgName: form.organizationName,
+									outputType: 'description',
+								});
+							}}
+							className='border border-purpleLight bg-transparent p-2 text-purpleLight  hover:bg-purpleLight hover:text-white transition-color'
+						>
+							<span className='mr-1'>CharmScript</span>
+							<IoSparklesOutline />
+						</Button>
 					</div>
 					<div className='w-full flex flex-col gap-4 border items-start border-purple-100 rounded-lg p-6 focus-within:shadow-md transition-shadow'>
 						<div className='flex flex-row items-center gap-4'>
 							<h4 className='font-semibold text-center'>Objective of the Activity</h4>
 						</div>
-						<Textarea id='objective' className='resize-none' onChange={onChange} />
-						<SheetObjectiveGen />
+						<Textarea
+							placeholder='Enter objective or auto-generate with CharmScript...'
+							id='objective'
+							className='resize-none'
+							onChange={onChange}
+							value={form.objective || ''}
+						/>
+						{!form.activityName || !form.organizationName ? (
+							<p className=' text-red-500 text-xs'>Organization and activity names required.</p>
+						) : (
+							''
+						)}
+						<Button
+							disabled={!form.activityName || !form.organizationName}
+							type='submit'
+							onClick={async (e) => {
+								setOutputType('objective');
+								await generateFormOne({
+									eventName: form.activityName,
+									orgName: form.organizationName,
+									outputType: 'objective',
+								});
+							}}
+							className='border border-purpleLight bg-transparent p-2 text-purpleLight  hover:bg-purpleLight hover:text-white transition-color'
+						>
+							<span className='mr-1'>CharmScript</span>
+							<IoSparklesOutline />
+						</Button>
 					</div>
 				</div>
 				<Separator className='my-4' />
