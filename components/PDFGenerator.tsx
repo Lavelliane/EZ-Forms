@@ -3,6 +3,7 @@
 import React from 'react';
 import html2pdf from 'html2pdf.js';
 
+//PDF Gen
 interface PDFGeneratorProps {
 	htmlContent: string;
 	fileName: string;
