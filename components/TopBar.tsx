@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Image from 'next/image';
 import logo from '../public/assets/ez-forms-logo.svg';
+import gcash from '../public/assets/jhury-gcash-qr.jpg';
 import { cn } from '@/lib/utils';
 import {
 	NavigationMenu,
@@ -61,6 +62,16 @@ export default function TopBar() {
 									{us.description}
 								</ListItem>
 							))}
+							<div className='flex w-full justify-center items-center gap-2'>
+								<div className='flex flex-col justify-center items-center'>
+									<h1 className='font-bold'>For Donations</h1>
+									<p className='text-xs font-semibold text-center'>G-Cash 09491863088</p>
+									<br />
+									<p className='text-xs font-semibold'>Innovation Always!</p>
+								</div>
+
+								<Image src={gcash} alt='jhury gcash qr' className='w-28 h-28' />
+							</div>
 						</ul>
 					</NavigationMenuContent>
 				</NavigationMenuItem>

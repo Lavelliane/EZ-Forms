@@ -1,5 +1,5 @@
 //form-1 default
-import { IFormOne, FormOneRequest } from '@/types';
+import { IFormOne, IFormTwo } from '@/types';
 
 export const defaultForm1: IFormOne = {
 	academicYear: '',
@@ -20,6 +20,21 @@ export const defaultForm1: IFormOne = {
 	sponsor: '',
 	description: '',
 	objective: '',
+	recommendedBy: '',
+	endorsedBy: '',
+	notedBy: '',
+};
+
+export const defaultForm2: IFormTwo = {
+	academicYear: '',
+	semester: '',
+	organizationName: '',
+	activityName: '',
+	date: '',
+	time: '',
+	venue: '',
+	involvement: '',
+	agenda: '',
 	recommendedBy: '',
 	endorsedBy: '',
 	notedBy: '',

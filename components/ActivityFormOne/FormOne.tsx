@@ -13,8 +13,6 @@ import { format } from 'date-fns';
 import { Calendar } from '@/components/ui/calendar';
 import PopoverNature from '../../components/PopoverNature';
 import { cn } from '@/lib/utils';
-import SheetDescriptionGen from '../SheetDescriptionGen';
-import SheetObjectiveGen from '../SheetObjectiveGen';
 import { Textarea } from '@/components/ui/textarea';
 import { IFormOne, FormOneRequest } from '@/types';
 import { defaultForm1 } from '../../default';
@@ -572,7 +570,7 @@ const FormOne = () => {
 							''
 						)}
 						<Button
-							disabled={(!form.activityName || !form.organizationName) || isLoading}
+							disabled={!form.activityName || !form.organizationName || isLoading}
 							type='submit'
 							onClick={async (e) => {
 								setOutputType('description');
@@ -605,7 +603,7 @@ const FormOne = () => {
 							''
 						)}
 						<Button
-							disabled={(!form.activityName || !form.organizationName) || isLoading}
+							disabled={!form.activityName || !form.organizationName || isLoading}
 							type='submit'
 							onClick={async (e) => {
 								setOutputType('objective');
