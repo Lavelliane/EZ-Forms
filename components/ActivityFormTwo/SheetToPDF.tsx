@@ -29,31 +29,42 @@ const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
 		setLoader(true);
 		const input = pdfRef.current;
 
-		// Ensure that the HTML2Canvas rendering is complete before generating the PDF
 		html2canvas(input as HTMLDivElement, { scale: 2 }).then((canvas) => {
 			const imgData = canvas.toDataURL('image/png');
-			const pdf = new jsPDF('p', 'mm', 'a4', true); // Use 'mm' units for positioning
-
-			// Set the PDF width and height to match A4 dimensions (210mm x 297mm)
+			const pdf = new jsPDF('p', 'mm', 'a4', true);
+		
 			const pdfWidth = pdf.internal.pageSize.getWidth();
 			const pdfHeight = pdf.internal.pageSize.getHeight();
-
-			// Calculate the image dimensions and position
-			const imgWidth = pdfWidth; // Adjust for margins (10mm on each side)
-			const imgHeight = pdfHeight;
-			const imgY = 0; // 10mm top margin
-
-			//ratio of image width based on height
-			const ratio = imgWidth / imgHeight + 0.1;
-
-			//margin to center image horizontally and vertically
-			const marginX = (pdfWidth - imgWidth * ratio) / 2;
-
-			// Add the image to the PDF with correct dimensions and position
-			pdf.addImage(imgData, 'PNG', marginX, imgY, imgWidth * ratio, imgHeight);
-			setLoader(false);
-			// Save the PDF with the specified file name
-			pdf.save('activity-form-2-agenda.pdf');
+			const maxImageWidth = pdfWidth - 15; // Adjust for margins (10mm on each side)
+		
+			const img = document.createElement('img');
+		
+			img.onload = function () {
+				const imgWidth = img.width;
+				const imgHeight = img.height;
+		
+				// Calculate the aspect ratio and adjust dimensions
+				const aspectRatio = imgWidth / imgHeight;
+				let newWidth, newHeight;
+		
+				if (aspectRatio > 1) {
+					newWidth = maxImageWidth;
+					newHeight = maxImageWidth / aspectRatio;
+				} else {
+					newWidth = maxImageWidth * aspectRatio;
+					newHeight = maxImageWidth;
+				}
+		
+				const topMargin = 2; // Adjust as needed
+				const imgY = topMargin;
+				const marginX = (pdfWidth - newWidth) / 2;
+		
+				pdf.addImage(img, 'PNG', marginX, imgY, newWidth, newHeight);
+				setLoader(false);
+				pdf.save('activity-form-2-agenda.pdf');
+			};
+		
+			img.src = imgData;
 		});
 	};
 
