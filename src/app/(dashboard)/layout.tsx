@@ -1,5 +1,4 @@
 'use client';
-import TopBar from '../../../components/TopBar';
 import SideBar from '../../../components/SideBar';
 
 function DashboardLayout({ children }: { children: React.ReactNode }) {

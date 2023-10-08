@@ -13,8 +13,6 @@ import { format } from 'date-fns';
 import { Calendar } from '@/components/ui/calendar';
 import PopoverNature from '../../components/PopoverNature';
 import { cn } from '@/lib/utils';
-import SheetDescriptionGen from '../SheetDescriptionGen';
-import SheetObjectiveGen from '../SheetObjectiveGen';
 import { Textarea } from '@/components/ui/textarea';
 import { IFormOne, FormOneRequest } from '@/types';
 import { defaultForm1 } from '../../default';
@@ -44,7 +42,7 @@ const FormOne = () => {
 	const [date, setDate] = useState<Date>();
 	const [outputType, setOutputType] = useState<any>('');
 
-	const { mutate: generateFormOne } = useMutation({
+	const { mutate: generateFormOne, isLoading } = useMutation({
 		mutationFn: getFormOneFields,
 		onSuccess: (data) => {
 			if (outputType === 'description') {
