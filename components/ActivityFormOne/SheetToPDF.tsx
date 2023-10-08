@@ -66,12 +66,12 @@ const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
 				side={'top'}
 				className='flex w-full h-screen justify-start items-start bg-purple-100 overflow-scroll text-[10px]'
 			>
-				<div ref={pdfRef} className='shadow-lg bg-white p-5'>
+				<div ref={pdfRef} className='bg-white p-5'>
 					<div className='w-[660px] h-fit bg-white relative'>
 						<div className='flex flex-col gap-1 absolute right-5'>
 							<p className='font-semibold border border-dark pb-2 px-2 pt-1 text-[11px]'>ACA – OSFA – SAS – 02F</p>
 							<p className='text-xs ml-2'>○ S.O. File</p>
-							<p className='text-xs ml-2'>○ O.S.F.O. File</p>
+							<p className='text-xs ml-2'>○ O.S.F.A. File</p>
 						</div>
 						<div className='flex flex-col items-center'>
 							<Image src={SchoolLogo} alt='USC Logo' className=' object-fill w-16 h-16' />
@@ -163,17 +163,17 @@ const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
 									<Checkbox checked={formContent.involvement == 'organizer'} className='translate-y-1' />
 								</div>
 								<p className='flex w-full'>
+									Expected Number of Participant(s):{' '}
+									{formContent.involvement == 'organizer' && (
+										<span className='underline underline-offset-2 ml-1'>{formContent.numberOfParticipants}</span>
+									)}
+								</p>
+								<p className='flex w-full'>
 									Who are the expected participants:
 									<br />
 									<br />
 									{formContent.involvement == 'organizer' && (
 										<span className='underline underline-offset-2 ml-1'>{formContent.participants}</span>
-									)}
-								</p>
-								<p className='flex w-full'>
-									Expected Number of Participant(s):{' '}
-									{formContent.involvement == 'organizer' && (
-										<span className='underline underline-offset-2 ml-1'>{formContent.numberOfParticipants}</span>
 									)}
 								</p>
 							</div>
@@ -183,17 +183,17 @@ const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
 									<Checkbox checked={formContent.involvement == 'participant'} className='translate-y-1' />
 								</div>
 								<p className='flex w-full'>
+									Expected Number of Participant(s):{' '}
+									{formContent.involvement == 'participant' && (
+										<span className='underline underline-offset-2 ml-1'>{formContent.numberOfParticipants}</span>
+									)}
+								</p>
+								<p className='flex w-full'>
 									Who is the sponsoring organization/ office?:
 									<br />
 									<br />
 									{formContent.involvement == 'participant' && (
 										<span className='underline underline-offset-2 ml-1'>{formContent.sponsor}</span>
-									)}
-								</p>
-								<p className='flex w-full'>
-									Expected Number of Participant(s):{' '}
-									{formContent.involvement == 'participant' && (
-										<span className='underline underline-offset-2 ml-1'>{formContent.numberOfParticipants}</span>
 									)}
 								</p>
 							</div>
@@ -202,10 +202,12 @@ const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
 							Name of the Activity:{' '}
 							<span className='underline underline-offset-2 ml-1'>{formContent.activityName}</span>
 						</p>
+						<br />
 						<p className='font-semibold mt-1'>
 							Short Description of the Activity:{' '}
 							<span className='underline underline-offset-2 ml-1'>{formContent.description}</span>
 						</p>
+						<br />
 						<p className='font-semibold mt-1'>
 							Objective/Purpose of the Activity:{' '}
 							<span className='underline underline-offset-2 ml-1'>{formContent.objective}</span>
@@ -288,17 +290,6 @@ const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
 									{'>'} For off-campus activities outside Cebu secure signatures{' '}
 									<span className='font-semibold'>A,&#160;B&#160;&&#160;C</span>
 								</p>
-							</div>
-						</div>
-						<div>
-							<p className='font-semibold mt-1'>Attachment(s):</p>
-							<div className='pl-5'>
-								<p>1. Budget schedule and tentative program of activities/itinerary.</p>
-								<p>
-									2. List of Participants with corresponding Parent’s Permits for activities held outside the campus.
-								</p>
-								<p>3. Note of Commitment from the Faculty Adviser for activities held outside the school campus.</p>
-								<p>4. Speaker’s data (for symposia, lectures, fora, leadership trainings, seminar-workshops, etc.).</p>
 							</div>
 						</div>
 						<div>
