@@ -30,9 +30,9 @@ const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
 		const input = pdfRef.current;
 
 		// Ensure that the HTML2Canvas rendering is complete before generating the PDF
-		html2canvas(input as HTMLDivElement).then((canvas) => {
+		html2canvas(input as HTMLDivElement, { scale: 2 }).then((canvas) => {
 			const imgData = canvas.toDataURL('image/png');
-			const pdf = new jsPDF('p', 'mm', 'a4'); // Use 'mm' units for positioning
+			const pdf = new jsPDF('p', 'mm', 'a4', true); // Use 'mm' units for positioning
 
 			// Set the PDF width and height to match A4 dimensions (210mm x 297mm)
 			const pdfWidth = pdf.internal.pageSize.getWidth();
@@ -53,7 +53,7 @@ const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
 			pdf.addImage(imgData, 'PNG', marginX, imgY, imgWidth * ratio, imgHeight);
 			setLoader(false);
 			// Save the PDF with the specified file name
-			pdf.save('activity-form-1.pdf');
+			pdf.save('activity-form-2-agenda.pdf');
 		});
 	};
 
@@ -66,7 +66,7 @@ const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
 				side={'top'}
 				className='flex w-full h-screen justify-start items-start bg-purple-100 overflow-scroll text-[10px]'
 			>
-				<div ref={pdfRef} className='shadow-lg bg-white p-5'>
+				<div ref={pdfRef} className=' bg-white p-5'>
 					<div className='w-[660px] h-fit bg-white relative justify-center'>
 						<div className='flex flex-col gap-1 absolute right-5'>
 							<p className='font-semibold border border-dark pb-2 px-2 pt-1 text-[11px]'>ACA – OSFA – SAS – 02F</p>
