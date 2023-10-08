@@ -71,7 +71,7 @@ const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
 						<div className='flex flex-col gap-1 absolute right-5'>
 							<p className='font-semibold border border-dark pb-2 px-2 pt-1 text-[11px]'>ACA – OSFA – SAS – 02F</p>
 							<p className='text-xs ml-2'>○ S.O. File</p>
-							<p className='text-xs ml-2'>○ O.S.F.O. File</p>
+							<p className='text-xs ml-2'>○ O.S.F.A. File</p>
 						</div>
 						<div className='flex flex-col items-center'>
 							<Image src={SchoolLogo} alt='USC Logo' className=' object-fill w-16 h-16' />
