@@ -24,7 +24,7 @@ const SideBar = () => {
 				<Popover>
 					<PopoverTrigger asChild>
 						<Button className='p-4 sm:mb-6 bg-transparent items-center hover:opacity-60 hover:bg-transparent transition-opacity'>
-							<Image src={logo} alt={'ez-forms-logo'} className=' invert w-16 h-fit' />
+							<Image src={logo} alt={'ez-forms-logo'} className=' invert w-16 h-10' />
 						</Button>
 					</PopoverTrigger>
 					<PopoverContent side={'right'} className='sm:w-fit w-fit h-fit pt-4 px-4 pb-0 sm:my-0 mt-20 sm:ml-4 -ml-14'>
@@ -38,17 +38,18 @@ const SideBar = () => {
 						<li>
 							<Popover>
 								<PopoverTrigger asChild>
-									<Button className='p-0 rounded-xl'>
-										<div
-											className={`hover:bg-purpleDark text-xl p-3 rounded-xl transition-colors ${
-												pathname == '/form-1' || pathname == '/form-2' ? 'bg-grayDark' : ''
-											}`}
-										>
-											<RiFilePaper2Line />
-										</div>
+									<Button
+										className={`hover:bg-purpleDark p-3 items-center justify-center text-xl rounded-xl transition-colors ${
+											pathname == '/form-1' || pathname == '/form-2' ? 'bg-grayDark' : ''
+										}`}
+									>
+										<RiFilePaper2Line />
 									</Button>
 								</PopoverTrigger>
-								<PopoverContent side={'right'} className='sm:w-fit w-fit h-fit bg-transparent border-none shadow-none'>
+								<PopoverContent
+									side={'right'}
+									className='sm:w-fit w-fit h-fit bg-transparent border-none shadow-none sm:translate-y-0 translate-y-14 sm:translate-x-0 -translate-x-[67px]'
+								>
 									<Link href='form-1'>
 										<div
 											className={`hover:text-grayDark transition-colors text-5xl ${

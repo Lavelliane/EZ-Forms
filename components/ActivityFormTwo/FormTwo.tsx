@@ -22,14 +22,13 @@ import getFormOneFields from '@/mutations/getFormOneFields';
 
 const FormTwo = () => {
 	const [form, setForm] = useState<IFormTwo>(defaultForm2);
-	const [academicYear, setAcademicYear] = useState('');
 	const [isCheckedOrganizer, setIsCheckedOrganizer] = useState(false);
 	const [isCheckedParticipant, setIsCheckedParticipant] = useState(false);
 	const [startTime, setStartTime] = useState('');
 	const [endTime, setEndTime] = useState('');
 	const [date, setDate] = useState<Date>();
 
-	const { mutate: generateFormTwo } = useMutation({
+	const { mutate: generateFormAgenda, isLoading } = useMutation({
 		mutationFn: getFormOneFields,
 		onSuccess: (data) => {
 			setForm({ ...form, ['agenda']: data });
@@ -52,12 +51,6 @@ const FormTwo = () => {
 	};
 
 	useEffect(() => {
-		//set academic year to current year
-		const currentYear = new Date().getFullYear();
-		setAcademicYear(currentYear + '-' + (currentYear + 1));
-	}, []);
-
-	useEffect(() => {
 		const dateString = date?.toString();
 
 		if (typeof dateString === 'string') {
@@ -78,15 +71,18 @@ const FormTwo = () => {
 			</CardHeader>
 			<CardContent className='flex flex-col gap-4 relative'>
 				<Separator className='my-2' />
-				<div className='flex sm:flex-row flex-col justify-center gap-10 sm:items-end items-center'>
-					<div className='grid w-full items-center gap-1.5'>
+				<div className='flex sm:flex-row flex-col justify-center sm:gap-10 gap-4 items-center'>
+					<div className='grid w-full sm:max-w-sm items-center gap-1.5'>
 						<Label htmlFor='organizationName'>Organization Name</Label>
 						<Input type='text' id='organizationName' placeholder='Enter name of organization' onChange={onChange} />
 					</div>
+					<div className='grid w-full sm:max-w-sm items-center gap-1.5'>
+						<Label htmlFor='activityName'>Activity Name</Label>
+						<Input type='text' id='activityName' placeholder='Enter name of the activity' onChange={onChange} />
+					</div>
 				</div>
-
 				<div className='flex sm:flex-row flex-col justify-center sm:gap-10 gap-4 items-center'>
-					<div className='grid w-full items-center gap-1.5'>
+					<div className='grid w-full sm:max-w-sm items-center gap-1.5'>
 						<Label htmlFor='date'>Date of Activity</Label>
 						<Popover>
 							<PopoverTrigger asChild>
@@ -113,14 +109,18 @@ const FormTwo = () => {
 							<CustomTimePicker id='endTime' value={endTime} onChange={(newValue) => setEndTime(newValue)} />
 						</div>
 					</div>
+				</div>
+				<div className='flex sm:flex-row flex-col justify-center gap-10 sm:items-end items-center'>
 					<div className='grid w-full sm:max-w-sm items-center gap-1.5'>
 						<Label htmlFor='venue'>Venue</Label>
 						<Input type='text' id='venue' placeholder='Enter name of venue' onChange={onChange} />
 					</div>
+					<div className='grid w-full sm:max-w-sm items-center gap-1.5'></div>
 				</div>
-
-				<div className='flex sm:flex-row flex-col justify-center sm:gap-6 gap-2 items-center'>
-					<h4 className='transition-transform font-semibold self-center w-fit z-10'>Nature&#160;of&#160;Involvement</h4>
+				<div className='flex sm:flex-row flex-col justify-center sm:gap-6 gap-2 items-center md:px-10'>
+					<h4 className='transition-transform font-semibold self-center w-full z-10'>
+						Nature&#160;of&#160;Involvement
+					</h4>
 					<div
 						className={`flex flex-col p-4 gap-4 w-full h-fit rounded-lg transition-colors ${
 							isCheckedOrganizer ? 'bg-purple-100' : ''
@@ -186,11 +186,18 @@ const FormTwo = () => {
 							''
 						)}
 						<Button
-							disabled={!form.organizationName}
+							disabled={!form.organizationName || !form.activityName || isLoading}
 							type='submit'
+							onClick={async (e) => {
+								await generateFormAgenda({
+									eventName: form.activityName,
+									orgName: form.organizationName,
+									outputType: 'agenda',
+								});
+							}}
 							className='border border-purpleLight bg-transparent p-2 text-purpleLight  hover:bg-purpleLight hover:text-white transition-color'
 						>
-							<span className='mr-1'>CharmScript</span>
+							<span className='mr-1'>{isLoading ? 'Loading..' : 'CharmScript'}</span>
 							<IoSparklesOutline />
 						</Button>
 					</div>

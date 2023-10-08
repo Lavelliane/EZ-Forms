@@ -29,6 +29,7 @@ export const defaultForm2: IFormTwo = {
 	academicYear: '',
 	semester: '',
 	organizationName: '',
+	activityName: '',
 	date: '',
 	time: '',
 	venue: '',

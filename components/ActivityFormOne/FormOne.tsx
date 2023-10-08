@@ -570,7 +570,7 @@ const FormOne = () => {
 							''
 						)}
 						<Button
-							disabled={(!form.activityName || !form.organizationName) || isLoading}
+							disabled={!form.activityName || !form.organizationName || isLoading}
 							type='submit'
 							onClick={async (e) => {
 								setOutputType('description');
@@ -603,7 +603,7 @@ const FormOne = () => {
 							''
 						)}
 						<Button
-							disabled={(!form.activityName || !form.organizationName) || isLoading}
+							disabled={!form.activityName || !form.organizationName || isLoading}
 							type='submit'
 							onClick={async (e) => {
 								setOutputType('objective');
