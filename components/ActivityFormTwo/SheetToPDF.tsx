@@ -41,19 +41,14 @@ const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
 			// Calculate the image dimensions and position
 			const imgWidth = pdfWidth; // Adjust for margins (10mm on each side)
 			const imgHeight = pdfHeight;
+			const imgX = 0; // Center the image
 			const imgY = 0; // 10mm top margin
 
-			//ratio of image width based on height
-			const ratio = imgWidth / imgHeight + 0.1;
-
-			//margin to center image horizontally and vertically
-			const marginX = (pdfWidth - imgWidth * ratio) / 2;
-
 			// Add the image to the PDF with correct dimensions and position
-			pdf.addImage(imgData, 'PNG', marginX, imgY, imgWidth * ratio, imgHeight);
+			pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth, imgHeight);
 			setLoader(false);
 			// Save the PDF with the specified file name
-			pdf.save('activity-form-1.pdf');
+			pdf.save('activity-form-2.pdf');
 		});
 	};
 
@@ -66,7 +61,7 @@ const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
 				side={'top'}
 				className='flex w-full h-screen justify-start items-start bg-purple-100 overflow-scroll text-[10px]'
 			>
-				<div ref={pdfRef} className='shadow-lg bg-white p-5'>
+				<div ref={pdfRef} className='bg-white p-5'>
 					<div className='w-[660px] h-fit bg-white relative justify-center'>
 						<div className='flex flex-col gap-1 absolute right-5'>
 							<p className='font-semibold border border-dark pb-2 px-2 pt-1 text-[11px]'>ACA – OSFA – SAS – 02F</p>
