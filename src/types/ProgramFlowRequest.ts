@@ -2,6 +2,7 @@ type ProgramFlowRequest = {
 	eventName: string;
 	orgName: string;
 
+/*
 	proficiencyLevel: 'beginner' | 'novice' | 'intermediate' | 'advanced' | 'expert';
 	modeOfPresentation: 'faceToFace' | 'online'
 	demos: Boolean;
@@ -12,6 +13,7 @@ type ProgramFlowRequest = {
 	quizzes: Boolean;
 	guestSpeakers: Boolean
 	groupActivities: Boolean
+*/
 
 };
 

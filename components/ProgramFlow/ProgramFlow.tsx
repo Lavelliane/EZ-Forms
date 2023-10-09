@@ -7,6 +7,11 @@ import { Separator } from '@/components/ui/separator';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import PopoverNature from '../../components/PopoverNature';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { CalendarIcon } from 'lucide-react';
+import { format } from 'date-fns';
+import { Calendar } from '@/components/ui/calendar';
+import { cn } from '@/lib/utils';
 import { IProgramFlow, ProgramFlowRequest } from '@/types';
 import { defaultForm1, defaultProgramFlow } from '../../default';
 import TabActivitySettings from './TabActivitySettings'
@@ -15,70 +20,95 @@ import { useMutation } from '@tanstack/react-query';
 import getFormOneFields from '@/mutations/getFormOneFields';
 import ComboboxPosition from './ComboboxPosition';
 import SliderProficiencyLevel from './SliderProficiencyLevel';
-
 import { ProficiencyLevel, proficiencyLevels } from './SliderProficiencyLevel';
-
+import SheetToPDF from './SheetToPDF';
+import getProgramFlowFields from '@/mutations/getProgramFlowFields';
 
 const ProgramFlow = () => {
 	const [form, setForm] = useState<IProgramFlow>(defaultProgramFlow);
 	const [academicYear, setAcademicYear] = useState('');
-	const [isSelectedBeginner, setIsSelectedBeginner] = useState(false);
-	const [isSelectedAmateur, setIsSelectedAmateur] = useState(false);
-	const [isSelectedNovice, setIsSelectedNovice] = useState(false);
-	const [isSelectedAdvanced, setIsSelectedAdvanced] = useState(false);
-	const [isSelectedExpert, setIsSelectedExpert] = useState(false);
-	const [isCheckedPosition, setIsCheckedPosition] = useState(false);
-
 	const [startTime, setStartTime] = useState('');
 	const [endTime, setEndTime] = useState('');
 	const [date, setDate] = useState<Date>();
-	const [outputType, setOutputType] = useState<any>('');
 
+	const [isCheckedPosition, setIsCheckedPosition] = useState(false);
+	const [presentationMode, setPresentationMode] = useState<any>('');
+	const [selectedPosition, setSelectedPosition] = useState<string>("");
 	const [selectedProficiencyLevel, setSelectedProficiencyLevel] = useState<number>(3);
 
-	const { mutate: generateProgramFlow, isLoading } = useMutation({
-		mutationFn: getFormOneFields,
-		onSuccess: (data) => {
-			if (outputType === 'description') {
-				setForm({ ...form, ['activityName']: data });
-			} else if (outputType === 'objective') {
-				setForm({ ...form, ['activityName']: data });
-			}
-		},
-	});
 
-	const handleProficiencyChange = (level: number) => {
-		// Use the selected proficiency level from the slider
-		console.log(proficiencyLevels[level - 1].label);
-		setSelectedProficiencyLevel(level);
-		// Update the form state with the selected proficiency level
-		setForm({ ...form, proficiencyLevel: proficiencyLevels[level - 1].label });
-	  };
-	  
-
-	const onCheckedPosition = (e: any) => {
-		if (e.target.id === 'otherPosition') {
-			setIsCheckedPosition(!isCheckedPosition);
-		}
-	};
-
+	// ########### Input Box Form Updates
 	const onChange = (e: any) => {
 		setForm({ ...form, [e.target.id]: e.target.value });
 	};
 
-	useEffect(() => {
-		const proficiencyForm = [
-			isSelectedBeginner && 'beginner',
-			isSelectedAmateur && 'amateur',
-			isSelectedNovice && 'novice',
-			isSelectedAdvanced && 'advanced',
-			isSelectedExpert && 'expert',
-		]
-			.filter(Boolean)
-			.join(', ');
+	// ########### Mutations
+	const { mutate: generateProgramFlow, isLoading } = useMutation({
+		mutationFn: getProgramFlowFields,
+		onSuccess: (data) => {
+		},
+	});
 
-		setForm({ ...form, ['proficiencyLevel']: proficiencyForm });
-	}, [isSelectedBeginner, isSelectedAmateur, isSelectedNovice, isSelectedAdvanced, isSelectedExpert]);
+
+	// ########### Proficiency Level
+	const handleProficiencyChange = (level: number) => {
+		// Use the selected proficiency level from the slider
+		setSelectedProficiencyLevel(level);
+		// Update the form state with the selected proficiency level
+		setForm({ ...form, proficiencyLevel: proficiencyLevels[level - 1].label });
+	  };
+
+	  useEffect(() => {
+		console.log('proficiencyLevel value has changed:', proficiencyLevels[selectedProficiencyLevel - 1].label);
+	  }, [selectedProficiencyLevel]);
+	
+	  
+	// ########### Organizer Position
+	const onCheckedPosition = (e: any) => {
+		if (e.target.id === 'otherPosition') {
+		  setIsCheckedPosition(!isCheckedPosition);
+		}
+	};
+	  
+	useEffect(() => {
+		if (isCheckedPosition === true) {
+			setForm({ ...form, ['organizerPosition']: form.organizerPosition });
+		} else if (isCheckedPosition == false) {
+			setForm({ ...form, ['organizerPosition']: selectedPosition });
+		}
+	  }, [isCheckedPosition]);
+
+	useEffect(() => {
+		if (isCheckedPosition === true) {
+			setForm({ ...form, ['organizerPosition']: form.organizerPosition });
+		} else if (isCheckedPosition == false) {
+			setForm({ ...form, ['organizerPosition']: selectedPosition });
+		}
+	}, [selectedPosition]);
+
+	  
+
+	// ########### Date & Time
+	useEffect(() => {
+		//set academic year to current year
+		const currentYear = new Date().getFullYear();
+		setAcademicYear(currentYear + '-' + (currentYear + 1));
+	}, []);
+
+	useEffect(() => {
+		const dateString = date?.toString();
+
+		if (typeof dateString === 'string') {
+			const dateFormat = dateString.split(' ')[1] + ' ' + dateString.split(' ')[2] + ', ' + dateString.split(' ')[3];
+			setForm({ ...form, ['date']: dateFormat });
+		}
+	}, [date]);
+
+	useEffect(() => {
+		setForm({ ...form, ['time']: startTime + ' - ' + endTime });
+	}, [startTime, endTime]);
+
+	
 
 	return (
 		<Card className='flex flex-grow flex-col bg-white hover:shadow-md transition-shadow w-fit h-fit z-10 py-4 sm:px-8 px-0'>
@@ -86,27 +116,71 @@ const ProgramFlow = () => {
 				<h4 className='text-base text-dark font-bold leading-none'>PROGRAM FLOW</h4>
 				<CardDescription className='text-gray-600'>(Program Flow for General Activity Form 1)</CardDescription>
 			</CardHeader>
-			<CardContent className='flex flex-col gap-4 relative'>
+			<CardContent className='flex flex-col gap-4 relative justify-center'>
+				<div className='flex flex-col w-full items-center gap-2'>
+					<div className='flex text-center items-center justify-center gap-2'>
+						<h4 className='font-semibold text-center text-sm'>Academic&#160;Year</h4>
+						<Input
+							type='text'
+							id='academicYear'
+							value={form.academicYear}
+							placeholder={academicYear}
+							onChange={onChange}
+							className='w-28 text-center text-sm'
+						/>
+					</div>
+					<Separator className='my-2 max-w-lg' />
+					<div className='flex flex-col w-full text-center items-center justify-center gap-1.5'>
+						<h4 className='font-semibold text-center text-sm'>Name&#160;of&#160;Organization</h4>
+						<Input type='text' id='organizationName' placeholder='Enter name of organization' onChange={onChange} className='text-center sm:w-full md:w-1/2'/>
+					</div>
+				</div>
 				<Separator className='my-2' />
 				<div className='flex sm:flex-row flex-col justify-center sm:gap-6 gap-2'>
 					<div className={`flex flex-col pb-5 pt-5 gap-4 w-full h-fit rounded-lg`}>
 						<div className='grid w-full sm:max-w-sm items-center gap-1.5'>
-								<Label htmlFor='headOrganizer'>Name of Head Organizer</Label>
-								<Input type='text' id='headOrganizer' placeholder='Enter name of head organizer' onChange={onChange} />
+								<Label htmlFor='activityName'>Name of Activity</Label>
+								<Input type='text' id='activityName' placeholder='Enter name of activity' onChange={onChange} />
+						</div>
+						<div className='grid w-full sm:max-w-sm items-center gap-1.5'>
+							<Label htmlFor='date'>Date of Activity</Label>
+							<Popover>
+								<PopoverTrigger asChild>
+									<Button
+										variant={'outline'}
+										className={cn('w-full justify-start text-left font-normal', !date && 'text-muted-foreground')}
+									>
+										<CalendarIcon className='mr-2 h-4 w-4' />
+										{date ? format(date, 'PPP') : <span>Pick a date</span>}
+									</Button>
+								</PopoverTrigger>
+								<PopoverContent className='p-0'>
+									<Calendar id='date' mode='single' selected={date} onSelect={setDate} initialFocus />
+								</PopoverContent>
+							</Popover>
+						</div>
+						<div className='grid w-full sm:max-w-sm items-center gap-1.5'>
+								<Label htmlFor='venue'>Venue of Activity</Label>
+								<Input type='text' id='venue' placeholder='Enter venue of activity' onChange={onChange} />
 						</div>
 					</div>
 					<div className={`flex flex-col pb-5 pt-5 gap-4 w-full h-fit rounded-lg`}>
-					<div className='grid w-full sm:max-w-sm items-center gap-1.5'>
+						<div className='grid w-full sm:max-w-sm items-center gap-1.5'>
+							<Label htmlFor='headOrganizer'>Name of Head Organizer</Label>
+							<Input type='text' id='headOrganizer' placeholder='Enter name of head organizer' onChange={onChange} />
+						</div>
+						<div className='grid w-full sm:max-w-sm items-center gap-1.5'>
 							<Label htmlFor='headOrganizer'>Position</Label>
 							<div className={`flex flex-col transition-transform ${isCheckedPosition ? 'hidden' : ''}`}>
-								<ComboboxPosition />
+								<ComboboxPosition
+									selectedPosition={selectedPosition}
+									onPositionChange={(position) => {
+										setSelectedPosition(position)
+									}}
+								/>
 							</div>
-							<div
-								className={`flex sm:flex-row flex-col justify-center sm:gap-10 gap-4 items-center transition-transform ${
-									isCheckedPosition ? '' : 'hidden'
-								}`}
-							>
-								<Input type='text' id='headOrganizer' placeholder='Enter position of head organizer' onChange={onChange} />
+							<div className={`flex transition-transform ${isCheckedPosition ? '' : 'hidden'}`}>
+								<Input type='text' id='organizerPosition' placeholder='Enter position of head organizer' onChange={onChange} />
 							</div>
 							<div className='flex gap-2 items-end'>
 								<Checkbox
@@ -117,14 +191,11 @@ const ProgramFlow = () => {
 									}}
 								/>
 								<div className='grid gap-1.5 leading-none'>
-									<label
-										htmlFor='otherPosition'
-										className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
-									>
+									<label htmlFor='otherPosition' className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>
 										Other
 									</label>
 								</div>
-							</div>
+							</div>							
 						</div>
 					</div>
 				</div>
@@ -156,11 +227,10 @@ const ProgramFlow = () => {
 								<Button
 									type='submit'
 									onClick={async (e) => {
-										setOutputType('objective');
+										setPresentationMode('faceToFace');
 										await generateProgramFlow({
 											eventName: form.activityName,
 											orgName: form.organizationName,
-											outputType: 'objective',
 										});
 									}}
 									className='border border-purpleLight bg-transparent p-2 text-purpleLight  hover:bg-purpleLight hover:text-white transition-color'
@@ -188,10 +258,11 @@ const ProgramFlow = () => {
 					<Button variant={'outline'} type='button'>
 						Reset
 					</Button>
+					<SheetToPDF formContent={form} />
 				</div>
 			</CardContent>
 		</Card>
 	);
 };
 
-export default ProgramFlow;
+export default ProgramFlow

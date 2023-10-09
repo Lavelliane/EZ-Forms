@@ -1,22 +1,19 @@
-"use client"
-
-import * as React from "react"
-import { Check, ChevronsUpDown } from "lucide-react"
-
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import * as React from "react";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
-} from "@/components/ui/command"
+} from "@/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
 
 const positions = [
   {
@@ -53,9 +50,14 @@ const positions = [
   }
 ]
 
-export function ComboPosition() {
-  const [open, setOpen] = React.useState(false)
-  const [value, setValue] = React.useState("")
+interface ComboboxPositionProps {
+  selectedPosition: string;
+  onPositionChange: (label: string, value: string) => void;
+}
+
+export function ComboboxPosition({ onPositionChange }: ComboboxPositionProps) {
+  const [open, setOpen] = React.useState(false);
+  const [value, setValue] = React.useState("");
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -83,6 +85,7 @@ export function ComboPosition() {
                 onSelect={(currentValue) => {
                   setValue(currentValue === value ? "" : currentValue)
                   setOpen(false)
+                  onPositionChange(position.label, position.value);
                 }}
               >
                 <Check
@@ -98,7 +101,7 @@ export function ComboPosition() {
         </Command>
       </PopoverContent>
     </Popover>
-  )
+  );
 }
 
-export default ComboPosition
+export default ComboboxPosition;
