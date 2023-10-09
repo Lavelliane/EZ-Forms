@@ -30,20 +30,17 @@ const SheetEzForms = () => {
 				</SheetHeader>
 				<Separator className='my-4' />
 				<div className='flex flex-col gap-4 py-4 text-sm'>
-					<div className='flex gap-2 p-4 bg-purple-100 rounded-md items-center'>
-						<h4 className='font-semibold text-lg w-40'>Form-1</h4>
-						<div className='text-3xl font-extralight'>|</div>
-						<p className='w-56'>Fill-up and generate the Activity Form 1.</p>
+					<div className='flex flex-col bg-purple-100 rounded-md items-start p-2'>
+						<h4 className='font-semibold text-base'>Forms</h4>
+						<p>Fill-up and generate the activity forms.</p>
 					</div>
-					<div className=' flex gap-2 p-4 bg-purple-100 rounded-md items-center'>
-						<h4 className='font-semibold text-lg w-40'>Attachments</h4>
-						<div className='text-3xl font-extralight'>|</div>
-						<p className='w-56'>Generate an AI-driven program flow.</p>
+					<div className='flex flex-col bg-purple-100 rounded-md items-start p-2'>
+						<h4 className='font-semibold text-base'>Attachments</h4>
+						<p>Generate an AI-driven program flow.</p>
 					</div>
-					<div className=' flex gap-2 p-4 bg-purple-100 rounded-md items-center'>
-						<h4 className='font-semibold text-lg w-40'>Listings</h4>
-						<div className='text-3xl font-extralight'>|</div>
-						<p className='w-56'>Store a copy of the list of participants.</p>
+					<div className='flex flex-col bg-purple-100 rounded-md items-start p-2'>
+						<h4 className='font-semibold text-base'>Listings</h4>
+						<p>Store a copy of the list of participants.</p>
 					</div>
 					<Separator className='my-4' />
 				</div>
