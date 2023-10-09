@@ -40,7 +40,7 @@ const SideBar = () => {
 								<PopoverTrigger asChild>
 									<Button
 										className={`hover:bg-purpleDark p-3 items-center justify-center text-xl rounded-xl transition-colors ${
-											pathname == '/forms' ? 'bg-grayDark' : ''
+											pathname.includes('forms') ? 'bg-grayDark' : ''
 										}`}
 									>
 										<RiFilePaper2Line />
