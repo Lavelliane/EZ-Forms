@@ -44,7 +44,18 @@ const FormOne = () => {
 	const [date, setDate] = useState<Date>();
 	const [outputType, setOutputType] = useState<any>('');
 
-	const onCheckedProficiency = (e: any) => {
+	const { mutate: generateFormOne, isLoading } = useMutation({
+		mutationFn: getFormOneFields,
+		onSuccess: (data) => {
+			if (outputType === 'description') {
+				setForm({ ...form, ['description']: data });
+			} else if (outputType === 'objective') {
+				setForm({ ...form, ['objective']: data });
+			}
+		},
+	});
+
+	const onCheckedCurricular = (e: any) => {
 		if (e.target.id === 'coCurricular') {
 			setIsCheckedCo(!isCheckedCo);
 			setIsCheckedExtra(false);
@@ -54,7 +65,6 @@ const FormOne = () => {
 		}
 		setForm({ ...form, ['curricular']: e.target.id });
 	};
-
 
 	const onCheckedCampus = (e: any) => {
 		if (e.target.id === 'inCampus') {
