@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import CardSchool from '../CardSchool';
 import CardActivitySection from '../CardActivitySection';
 import FormOne from './FormOne';
+import Loading from '../Loading';
 
 export default function Header() {
 	return (
@@ -13,7 +14,9 @@ export default function Header() {
 				</div>
 				<div className='flex-none w-[461px]'></div>
 				<div className='flex items-center justify-center w-full xl:px-6 sm:pr-6 p-0 xl:ml-0 sm:ml-[90px] m-0'>
-					<FormOne />
+					<Suspense fallback={<Loading />}>
+						<FormOne />
+					</Suspense>
 				</div>
 			</div>
 		</div>

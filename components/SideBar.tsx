@@ -40,7 +40,7 @@ const SideBar = () => {
 								<PopoverTrigger asChild>
 									<Button
 										className={`hover:bg-purpleDark p-3 items-center justify-center text-xl rounded-xl transition-colors ${
-											pathname == '/form-1' || pathname == '/form-2' ? 'bg-grayDark' : ''
+											pathname == '/forms' ? 'bg-grayDark' : ''
 										}`}
 									>
 										<RiFilePaper2Line />
@@ -53,7 +53,7 @@ const SideBar = () => {
 									<Link href='form-1'>
 										<div
 											className={`hover:text-grayDark transition-colors text-5xl ${
-												pathname == '/form-1' ? 'text-purpleDark' : ''
+												pathname == '/forms/form-1' ? 'text-purpleDark' : ''
 											}`}
 										>
 											<TbSquareRoundedNumber1Filled />
@@ -62,7 +62,7 @@ const SideBar = () => {
 									<Link href='form-2'>
 										<div
 											className={`hover:text-grayDark transition-colors text-5xl ${
-												pathname == '/form-2' ? 'text-purpleDark' : ''
+												pathname == '/forms/form-2' ? 'text-purpleDark' : ''
 											}`}
 										>
 											<TbSquareRoundedNumber2Filled />
