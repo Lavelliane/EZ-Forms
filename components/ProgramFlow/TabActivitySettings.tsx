@@ -18,9 +18,23 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs"
 
-export function TabActivitySettings() {
+
+interface TabActivitySettingsProps {
+  selectedTab: string;
+  setSelectedTab: (selectedTab: string) => void;
+}
+
+export function TabActivitySettings({
+  selectedTab,
+  setSelectedTab,
+}: TabActivitySettingsProps) {
+
+  const handleTabChange: (selectedTab: string) => void = (selectedTab: string) => {
+    setSelectedTab(selectedTab);
+  };
+
   return (
-    <Tabs defaultValue="face-to-face" className="w-[400px]">
+    <Tabs defaultValue="face-to-face" className="w-[400px]" onValueChange={handleTabChange}>
       <TabsList className="grid w-full grid-cols-2">
         <TabsTrigger value="face-to-face">Face-to-Face</TabsTrigger>
         <TabsTrigger value="online">Online</TabsTrigger>

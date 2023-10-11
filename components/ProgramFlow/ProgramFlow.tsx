@@ -6,6 +6,8 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
+import { DataTable } from './EditableTable'
+import { CustomTimePicker } from '@/components/ui/time-picker';
 import PopoverNature from '../../components/PopoverNature';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { CalendarIcon } from 'lucide-react';
@@ -14,15 +16,24 @@ import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import { IProgramFlow, ProgramFlowRequest } from '@/types';
 import { defaultForm1, defaultProgramFlow } from '../../default';
-import TabActivitySettings from './TabActivitySettings'
 import { IoSparklesOutline } from 'react-icons/io5';
 import { useMutation } from '@tanstack/react-query';
 import getFormOneFields from '@/mutations/getFormOneFields';
 import ComboboxPosition from './ComboboxPosition';
-import SliderProficiencyLevel from './SliderProficiencyLevel';
-import { ProficiencyLevel, proficiencyLevels } from './SliderProficiencyLevel';
+import SliderProficiencyLevel, { ProficiencyLevel, proficiencyLevels } from './SliderProficiencyLevel';
+import TabActivitySettings from './TabActivitySettings'
 import SheetToPDF from './SheetToPDF';
 import getProgramFlowFields from '@/mutations/getProgramFlowFields';
+import { Activity, columns } from "./TableColumns"
+import { start } from 'repl';
+
+async function getTableData(): Promise<Activity[]> {
+	// Fetch data from your API here.
+	return [
+
+	  // ...
+	]
+}
 
 const ProgramFlow = () => {
 	const [form, setForm] = useState<IProgramFlow>(defaultProgramFlow);
@@ -35,6 +46,8 @@ const ProgramFlow = () => {
 	const [presentationMode, setPresentationMode] = useState<any>('');
 	const [selectedPosition, setSelectedPosition] = useState<string>("");
 	const [selectedProficiencyLevel, setSelectedProficiencyLevel] = useState<number>(3);
+	const [tableData, setTableData] = useState<Activity[]>([]);
+	const [selectedMode, setSelectedMode] = useState<string>("face-to-face");
 
 
 	// ########### Input Box Form Updates
@@ -42,12 +55,28 @@ const ProgramFlow = () => {
 		setForm({ ...form, [e.target.id]: e.target.value });
 	};
 
-	// ########### Mutations
+	// ########### API Fetch
 	const { mutate: generateProgramFlow, isLoading } = useMutation({
 		mutationFn: getProgramFlowFields,
 		onSuccess: (data) => {
+			console.log(data);
+			setTableData(data);
 		},
 	});
+
+	// ########### Program Flow Table
+	useEffect(() => {
+	  async function fetchData() {
+		try {
+		  const data = await getTableData();
+		  setTableData(data);
+		} catch (error) {
+		  console.error("Error fetching data:", error);
+		}
+	  }
+  
+	  fetchData();
+	}, []);
 
 
 	// ########### Proficiency Level
@@ -58,10 +87,7 @@ const ProgramFlow = () => {
 		setForm({ ...form, proficiencyLevel: proficiencyLevels[level - 1].label });
 	  };
 
-	  useEffect(() => {
-		console.log('proficiencyLevel value has changed:', proficiencyLevels[selectedProficiencyLevel - 1].label);
-	  }, [selectedProficiencyLevel]);
-	
+
 	  
 	// ########### Organizer Position
 	const onCheckedPosition = (e: any) => {
@@ -108,7 +134,7 @@ const ProgramFlow = () => {
 		setForm({ ...form, ['time']: startTime + ' - ' + endTime });
 	}, [startTime, endTime]);
 
-	
+
 
 	return (
 		<Card className='flex flex-grow flex-col bg-white hover:shadow-md transition-shadow w-fit h-fit z-10 py-4 sm:px-8 px-0'>
@@ -116,6 +142,8 @@ const ProgramFlow = () => {
 				<h4 className='text-base text-dark font-bold leading-none'>PROGRAM FLOW</h4>
 				<CardDescription className='text-gray-600'>(Program Flow for General Activity Form 1)</CardDescription>
 			</CardHeader>
+
+			{/* ---------- Top Section ---------- */}
 			<CardContent className='flex flex-col gap-4 relative justify-center'>
 				<div className='flex flex-col w-full items-center gap-2'>
 					<div className='flex text-center items-center justify-center gap-2'>
@@ -136,6 +164,8 @@ const ProgramFlow = () => {
 					</div>
 				</div>
 				<Separator className='my-2' />
+
+				{/* ---------- Event Details Section ---------- */}
 				<div className='flex sm:flex-row flex-col justify-center sm:gap-6 gap-2'>
 					<div className={`flex flex-col pb-5 pt-5 gap-4 w-full h-fit rounded-lg`}>
 						<div className='grid w-full sm:max-w-sm items-center gap-1.5'>
@@ -170,36 +200,50 @@ const ProgramFlow = () => {
 							<Input type='text' id='headOrganizer' placeholder='Enter name of head organizer' onChange={onChange} />
 						</div>
 						<div className='grid w-full sm:max-w-sm items-center gap-1.5'>
-							<Label htmlFor='headOrganizer'>Position</Label>
-							<div className={`flex flex-col transition-transform ${isCheckedPosition ? 'hidden' : ''}`}>
-								<ComboboxPosition
-									selectedPosition={selectedPosition}
-									onPositionChange={(position) => {
-										setSelectedPosition(position)
-									}}
-								/>
-							</div>
-							<div className={`flex transition-transform ${isCheckedPosition ? '' : 'hidden'}`}>
-								<Input type='text' id='organizerPosition' placeholder='Enter position of head organizer' onChange={onChange} />
-							</div>
-							<div className='flex gap-2 items-end'>
-								<Checkbox
-									id='otherPosition'
-									checked={isCheckedPosition}
-									onCheckedChange={(e) => {
-										onCheckedPosition({ target: { id: 'otherPosition', value: isCheckedPosition } });
-									}}
-								/>
-								<div className='grid gap-1.5 leading-none'>
-									<label htmlFor='otherPosition' className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>
-										Other
-									</label>
+							<Label htmlFor='headOrganizer'>Position</Label>		
+							<div className='flex w-full items-center justify-between gap-4'>
+								<div className={`flex flex-col w-full transition-transform ${isCheckedPosition ? 'hidden' : ''}`}>
+									<ComboboxPosition
+										selectedPosition={selectedPosition}
+										onPositionChange={(position) => {
+											setSelectedPosition(position)
+										}}
+									/>
 								</div>
-							</div>							
+								<div className={`flex w-full transition-transform ${isCheckedPosition ? '' : 'hidden'}`}>
+									<Input type='text' id='organizerPosition' placeholder='Enter position of head organizer' onChange={onChange} />
+								</div>
+								<div className='flex gap-2 items-end'>
+									<Checkbox
+										id='otherPosition'
+										checked={isCheckedPosition}
+										onCheckedChange={(e) => {
+											onCheckedPosition({ target: { id: 'otherPosition', value: isCheckedPosition } });
+										}}
+									/>
+									<div className='grid gap-1.5 leading-none'>
+										<label htmlFor='otherPosition' className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>
+											Other
+										</label>
+									</div>
+								</div>	
+							</div>
+						</div>
+						<div className='flex flex-1 w-full sm:max-w-sm items-center gap-4'>
+							<div className='flex flex-col w-full min-w-[118px] items-start justify-start gap-1.5'>
+								<Label htmlFor='startTime'>Start Time</Label>
+								<CustomTimePicker id='startTime' value={startTime} onChange={(newValue) => setStartTime(newValue)} />
+							</div>
+							<div className='flex flex-col w-full min-w-[118px] items-start justify-start gap-1.5'>
+								<Label htmlFor='endTime'>End Time</Label>
+								<CustomTimePicker id='endTime' value={endTime} onChange={(newValue) => setEndTime(newValue)} />
+							</div>
 						</div>
 					</div>
 				</div>
 				<Separator className='my-2' />
+
+				{/* ---------- Prophesize Settings Section ---------- */}
 				<div className='flex sm:flex-row flex-col justify-center sm:gap-6 gap-2'>
 					<div className={`flex flex-col pb-5 pt-5 gap-4 w-full h-fit rounded-lg`}>
 						<div className='flex flex-col w-full gap-2 items-center justify-center'>
@@ -210,7 +254,10 @@ const ProgramFlow = () => {
 									description='The intended participants’ estimated level of skill or knowledge on the activity. This metric will be used to fine-tune the program flow generation.'
 								/>
 							</span>
-							<SliderProficiencyLevel proficiencyLevels={proficiencyLevels} onProficiencyChange={handleProficiencyChange} />
+							<SliderProficiencyLevel 
+								proficiencyLevels={proficiencyLevels} 
+								onProficiencyChange={handleProficiencyChange} 
+							/>
 						</div>						
 					</div>
 					<div className={`flex flex-col pb-5 pt-5 gap-4 w-full h-fit rounded-lg`}>
@@ -222,7 +269,10 @@ const ProgramFlow = () => {
 									description='Select specific components you would like to add in certain parts of your activity, or leave it all off and let magic do its thing.'
 								/>
 							</span>
-							<TabActivitySettings />
+							<TabActivitySettings
+								selectedTab={selectedMode}
+								setSelectedTab={setSelectedMode}
+							/>
 							<div className='flex w-full justify-self-start'>
 								<Button
 									type='submit'
@@ -230,7 +280,9 @@ const ProgramFlow = () => {
 										setPresentationMode('faceToFace');
 										await generateProgramFlow({
 											eventName: form.activityName,
-											orgName: form.organizationName,
+											type: selectedMode,
+											startTime: startTime,
+											endTime: endTime,
 										});
 									}}
 									className='border border-purpleLight bg-transparent p-2 text-purpleLight  hover:bg-purpleLight hover:text-white transition-color'
@@ -243,6 +295,13 @@ const ProgramFlow = () => {
 					</div>
 				</div>
 				<Separator className='my-2' />
+
+				{/* ---------- Table Section ---------- */}
+				<div className='flex sm:flex-row flex-col justify-center sm:gap-6 gap-2'>
+					<div className="flex items-center justify-center w-full py-10">
+						<DataTable columns={columns} data={tableData} />
+					</div>
+				</div>
 				<Separator className='my-2' />
 				<Separator className='my-4' />
 				<div className='flex flex-col items-center justify-evenly w-full my-4 text-justify'>

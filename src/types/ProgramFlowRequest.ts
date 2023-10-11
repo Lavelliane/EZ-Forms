@@ -1,6 +1,8 @@
 type ProgramFlowRequest = {
 	eventName: string;
-	orgName: string;
+	type: string;
+    startTime: string;
+    endTime: string;
 
 /*
 	proficiencyLevel: 'beginner' | 'novice' | 'intermediate' | 'advanced' | 'expert';

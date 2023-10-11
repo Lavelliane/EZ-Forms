@@ -4,7 +4,7 @@ import axios from 'axios';
 export default async function getProgramFlowFields(params: ProgramFlowRequest) {
 	try {
 		const response = await axios.post('/api/v1/program-flow', params);
-		return response.data.content;
+		return response.data.events;
 	} catch (error) {
 		console.error(error);
 	}
