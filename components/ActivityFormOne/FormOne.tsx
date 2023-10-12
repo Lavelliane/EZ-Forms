@@ -24,6 +24,9 @@ import getFormOneFields from '@/mutations/getFormOneFields';
 const FormOne = () => {
 	const [form, setForm] = useState<IFormOne>(defaultForm1);
 	const [academicYear, setAcademicYear] = useState('');
+	const [isCheckedFirstSem, setIsCheckedFirstSem] = useState(false);
+	const [isCheckedSecondSem, setIsCheckedSecondSem] = useState(false);
+	const [isCheckedSummerSem, setIsCheckedSummerSem] = useState(false);
 	const [isCheckedCo, setIsCheckedCo] = useState(false);
 	const [isCheckedExtra, setIsCheckedExtra] = useState(false);
 	const [isCheckedIn, setIsCheckedIn] = useState(false);
@@ -34,9 +37,6 @@ const FormOne = () => {
 	const [isCheckedOrganization, setIsCheckedOrganization] = useState(false);
 	const [isCheckedOrganizer, setIsCheckedOrganizer] = useState(false);
 	const [isCheckedParticipant, setIsCheckedParticipant] = useState(false);
-	const [isCheckedFirstSem, setIsCheckedFirstSem] = useState(false);
-	const [isCheckedSecondSem, setIsCheckedSecondSem] = useState(false);
-	const [isCheckedSummerSem, setIsCheckedSummerSem] = useState(false);
 	const [startTime, setStartTime] = useState('');
 	const [endTime, setEndTime] = useState('');
 	const [date, setDate] = useState<Date>();

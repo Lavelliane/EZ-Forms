@@ -12,39 +12,51 @@ import { CalendarIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
-import { Textarea } from '@/components/ui/textarea';
-import { IFormTwo, FormOneRequest } from '@/types';
-import { defaultForm2 } from '../../default';
+import { IFormThree, FormOneRequest } from '@/types';
+import { defaultForm3 } from '../../default';
 import SheetToPDF from './SheetToPDF';
-import { IoSparklesOutline } from 'react-icons/io5';
-import { useMutation } from '@tanstack/react-query';
-import getFormOneFields from '@/mutations/getFormOneFields';
 
 const FormTwo = () => {
-	const [form, setForm] = useState<IFormTwo>(defaultForm2);
-	const [isCheckedOrganizer, setIsCheckedOrganizer] = useState(false);
-	const [isCheckedParticipant, setIsCheckedParticipant] = useState(false);
+	const [form, setForm] = useState<IFormThree>(defaultForm3);
+	const [academicYear, setAcademicYear] = useState('');
+	const [isCheckedFirstSem, setIsCheckedFirstSem] = useState(false);
+	const [isCheckedSecondSem, setIsCheckedSecondSem] = useState(false);
+	const [isCheckedSummerSem, setIsCheckedSummerSem] = useState(false);
 	const [startTime, setStartTime] = useState('');
 	const [endTime, setEndTime] = useState('');
 	const [date, setDate] = useState<Date>();
 
-	const { mutate: generateFormAgenda, isLoading } = useMutation({
-		mutationFn: getFormOneFields,
-		onSuccess: (data) => {
-			setForm({ ...form, ['agenda']: data });
-		},
-	});
-
-	const onCheckedInvolvement = (e: any) => {
-		if (e.target.id === 'organizer') {
-			setIsCheckedOrganizer(!isCheckedOrganizer);
-			setIsCheckedParticipant(false);
-		} else if (e.target.id === 'participant') {
-			setIsCheckedOrganizer(false);
-			setIsCheckedParticipant(!isCheckedParticipant);
+	const onCheckedSemester = (e: any) => {
+		if (e.target.id === 'firstSem') {
+			setIsCheckedFirstSem(!isCheckedFirstSem);
+			setIsCheckedSecondSem(false);
+			setIsCheckedSummerSem(false);
+		} else if (e.target.id === 'secondSem') {
+			setIsCheckedSecondSem(!isCheckedSecondSem);
+			setIsCheckedFirstSem(false);
+			setIsCheckedSummerSem(false);
+		} else if (e.target.id === 'summerSem') {
+			setIsCheckedSummerSem(!isCheckedSummerSem);
+			setIsCheckedFirstSem(false);
+			setIsCheckedSecondSem(false);
 		}
-		setForm({ ...form, ['involvement']: e.target.id });
+		setForm({ ...form, ['semester']: e.target.id });
 	};
+
+	useEffect(() => {
+		//set academic year to current year
+		const currentYear = new Date().getFullYear();
+		setAcademicYear(currentYear + '-' + (currentYear + 1));
+	}, []);
+
+	useEffect(() => {
+		const dateString = date?.toString();
+
+		if (typeof dateString === 'string') {
+			const dateFormat = dateString.split(' ')[1] + ' ' + dateString.split(' ')[2] + ', ' + dateString.split(' ')[3];
+			setForm({ ...form, ['date']: dateFormat });
+		}
+	}, [date]);
 
 	const onChange = (e: any) => {
 		setForm({ ...form, [e.target.id]: e.target.value });
@@ -66,10 +78,79 @@ const FormTwo = () => {
 	return (
 		<Card className='flex flex-grow flex-col bg-white hover:shadow-md transition-shadow w-fit h-fit z-10 py-4 sm:px-8 px-0'>
 			<CardHeader className='text-center'>
-				<h4 className='text-base text-dark font-bold leading-none'>ACTIVITY FORM 2</h4>
-				<CardDescription className='text-gray-600'>(General Meetings/ Assemblies)</CardDescription>
+				<h4 className='text-base text-dark font-bold leading-none'>ACTIVITY FORM 3</h4>
+				<CardDescription className='text-gray-600'>(Fund-Raising)</CardDescription>
 			</CardHeader>
 			<CardContent className='flex flex-col gap-4 relative'>
+				<Separator className='my-2' />
+				<div className='flex flex-col w-full items-center gap-2'>
+					<div className='flex text-center items-center justify-center gap-2'>
+						<h4 className='font-semibold text-center text-sm'>Academic&#160;Year</h4>
+						<Input
+							type='text'
+							id='academicYear'
+							value={form.academicYear}
+							placeholder={academicYear}
+							onChange={onChange}
+							className='w-28 text-center text-sm'
+						/>
+					</div>
+					<div id='academicYear' className='flex sm:flex-row flex-col gap-2 sm:items-center'>
+						<div className='flex gap-2 items-end'>
+							<Checkbox
+								id='firstSem'
+								checked={isCheckedFirstSem}
+								onCheckedChange={(e) => {
+									onCheckedSemester({ target: { id: 'firstSem', value: isCheckedFirstSem } });
+								}}
+							/>
+							<div className='grid gap-1.5 leading-none'>
+								<label
+									htmlFor='firstSem'
+									className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+								>
+									1st&#160;Sem
+								</label>
+							</div>
+						</div>
+						<div className=' text-slate-300 font-thin sm:block hidden'>|</div>
+						<div className='flex gap-2 items-end'>
+							<Checkbox
+								id='secondSem'
+								checked={isCheckedSecondSem}
+								onCheckedChange={(e) => {
+									onCheckedSemester({ target: { id: 'secondSem', value: isCheckedSecondSem } });
+								}}
+							/>
+							<div className='grid gap-1.5 leading-none'>
+								<label
+									htmlFor='secondSem'
+									className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+								>
+									2nd&#160;Sem
+								</label>
+							</div>
+						</div>
+						<div className=' text-slate-300 font-thin sm:block hidden'>|</div>
+						<div className='flex gap-2 items-end'>
+							<Checkbox
+								id='summerSem'
+								checked={isCheckedSummerSem}
+								onCheckedChange={(e) => {
+									onCheckedSemester({ target: { id: 'summerSem', value: isCheckedSummerSem } });
+								}}
+							/>
+							<div className='grid gap-1.5 leading-none'>
+								<label
+									htmlFor='summerSem'
+									className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+								>
+									Summer
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
 				<Separator className='my-2' />
 				<div className='flex sm:flex-row flex-col justify-center sm:gap-10 gap-4 items-center'>
 					<div className='grid w-full sm:max-w-sm items-center gap-1.5'>
@@ -117,127 +198,41 @@ const FormTwo = () => {
 					</div>
 					<div className='grid w-full sm:max-w-sm items-center gap-1.5'></div>
 				</div>
-				<div className='flex sm:flex-row flex-col justify-center sm:gap-6 gap-2 items-center md:px-10'>
-					<h4 className='transition-transform font-semibold self-center w-full z-10'>
-						Nature&#160;of&#160;Involvement
-					</h4>
-					<div
-						className={`flex flex-col p-4 gap-4 w-full h-fit rounded-lg transition-colors ${
-							isCheckedOrganizer ? 'bg-purple-100' : ''
-						}`}
-					>
-						<div className='flex gap-2 items-end'>
-							<Checkbox
-								id='organizer'
-								checked={isCheckedOrganizer}
-								onCheckedChange={(e) => {
-									onCheckedInvolvement({ target: { id: 'organizer', value: isCheckedOrganizer } });
-								}}
-							/>
-							<div className='grid gap-1.5 leading-none'>
-								<label
-									htmlFor='organizer'
-									className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
-								>
-									Organizer/Sponsor
-								</label>
-							</div>
-						</div>
-					</div>
-					<div
-						className={`flex flex-col p-4 gap-4 w-full h-fit rounded-lg transition-colors ${
-							isCheckedParticipant ? 'bg-purple-100' : ''
-						}`}
-					>
-						<div className='flex gap-2 items-end'>
-							<Checkbox
-								id='participant'
-								checked={isCheckedParticipant}
-								onCheckedChange={(e) => {
-									onCheckedInvolvement({ target: { id: 'participant', value: isCheckedParticipant } });
-								}}
-							/>
-							<div className='grid gap-1.5 leading-none'>
-								<label
-									htmlFor='organizer'
-									className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
-								>
-									Participant
-								</label>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div className='flex sm:flex-row flex-col items-center justify-center gap-6 w-full'>
-					<div className='w-full flex flex-col gap-4 border items-start border-purple-100 rounded-lg p-6 focus-within:shadow-md transition-shadow'>
-						<div className='flex flex-row items-center gap-4'>
-							<h4 className='font-semibold text-center'>Agenda</h4>
-						</div>
-						<Textarea
-							placeholder='Enter agenda or auto-generate with CharmScript...'
-							id='agenda'
-							className='resize-none'
-							onChange={onChange}
-							value={form.agenda || ''}
-						/>
-						{!form.organizationName ? (
-							<p className=' text-red-500 text-xs'>Organization and activity names required.</p>
-						) : (
-							''
-						)}
-						<Button
-							disabled={!form.organizationName || !form.activityName || isLoading}
-							type='submit'
-							onClick={async (e) => {
-								await generateFormAgenda({
-									eventName: form.activityName,
-									orgName: form.organizationName,
-									outputType: 'agenda',
-								});
-							}}
-							className='border border-purpleLight bg-transparent p-2 text-purpleLight  hover:bg-purpleLight hover:text-white transition-color'
-						>
-							<span className='mr-1'>{isLoading ? 'Loading..' : 'CharmScript'}</span>
-							<IoSparklesOutline />
-						</Button>
-					</div>
-				</div>
+
 				<Separator className='my-4' />
 				<div className='flex flex-col items-center justify-evenly w-full '>
 					<h4 className='font-semibold text-center'>Signatories</h4>
 					<div className='flex sm:flex-row flex-col w-full gap-4 mt-4'>
-						<div className='rounded-lg bg-purple-100 p-4 text-dark w-full hover:shadow-md focus-within:shadow-md transition-shadow'>
-							<label htmlFor='recommendedBy' className='text-sm font-medium leading-none'>
-								Recommended&#160;by:
-							</label>
-							<Input
-								id='recommendedBy'
-								placeholder='Enter complete name'
-								className='rounded-none border-t-0 border-x-0 border-gray-400 bg-transparent text-dark text-sm font-medium leading-none focus-visible:bg-transparent'
-								onChange={onChange}
-							/>
-							<p className='text-xs font-medium leading-none justify-center mt-2 text-center'>
-								President of the Student Organization
-							</p>
+						<div className='flex rounded-lg bg-purple-100 p-4 text-dark w-full hover:shadow-md focus-within:shadow-md transition-shadow items-end justify-center gap-4'>
+							<div>
+								<label htmlFor='president' className='text-sm font-medium leading-none'>
+									Submitted&#160;by:
+								</label>
+								<Input
+									id='president'
+									placeholder='Enter complete name'
+									className='rounded-none border-t-0 border-x-0 border-gray-400 bg-transparent text-dark text-sm font-medium leading-none focus-visible:bg-transparent'
+									onChange={onChange}
+								/>
+								<p className='text-xs font-medium leading-none justify-center mt-2 text-center'>President</p>
+							</div>
+							<div>
+								<Input
+									id='treasurer'
+									placeholder='Enter complete name'
+									className='rounded-none border-t-0 border-x-0 border-gray-400 bg-transparent text-dark text-sm font-medium leading-none focus-visible:bg-transparent'
+									onChange={onChange}
+								/>
+								<p className='text-xs font-medium leading-none justify-center mt-2 text-center'>Faculty-Adviser</p>
+							</div>
 						</div>
-						<div className='rounded-lg bg-purple-100 p-4 text-dark w-full hover:shadow-md focus-within:shadow-md transition-shadow'>
+
+						<div className='rounded-lg bg-purple-100 p-4 text-dark w-1/2 hover:shadow-md focus-within:shadow-md transition-shadow'>
 							<label htmlFor='endorsedBy' className='text-sm font-medium leading-none'>
 								Endorsed&#160;by:
 							</label>
 							<Input
 								id='endorsedBy'
-								placeholder='Enter complete name'
-								className='rounded-none border-t-0 border-x-0 border-gray-400 bg-transparent text-dark text-sm font-medium leading-none focus-visible:bg-transparent'
-								onChange={onChange}
-							/>
-							<p className='text-xs font-medium leading-none justify-center mt-2 text-center'>Faculty-Adviser</p>
-						</div>
-						<div className='rounded-lg bg-purple-100 p-4 text-dark w-full hover:shadow-md focus-within:shadow-md transition-shadow'>
-							<label htmlFor='notedBy' className='text-sm font-medium leading-none'>
-								Noted&#160;by:
-							</label>
-							<Input
-								id='notedBy'
 								placeholder='Enter complete name'
 								className='rounded-none border-t-0 border-x-0 border-gray-400 bg-transparent text-dark text-sm font-medium leading-none focus-visible:bg-transparent'
 								onChange={onChange}

@@ -1,5 +1,5 @@
 //form-1 default
-import { IFormOne, IFormTwo } from '@/types';
+import { IFormOne, IFormTwo, IFormThree } from '@/types';
 
 export const defaultForm1: IFormOne = {
 	academicYear: '',
@@ -38,4 +38,22 @@ export const defaultForm2: IFormTwo = {
 	recommendedBy: '',
 	endorsedBy: '',
 	notedBy: '',
+};
+
+export const defaultForm3: IFormThree = {
+	academicYear: '',
+	semester: '',
+	organizationName: '',
+	typeOfActivity: '',
+	date: '',
+	time: '',
+	venue: '',
+	campus: '',
+	cashInflow: [{ particulars: '', amount: '' }],
+	cashOutflow: [{ particulars: '', amount: '' }],
+	netCashFlow: '',
+	involvement: '',
+	treasurer: '',
+	president: '',
+	endorsedBy: '',
 };

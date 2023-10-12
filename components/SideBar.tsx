@@ -8,6 +8,7 @@ import {
 	TbSquareRoundedNumber1Filled,
 	TbSquareRoundedNumber2Filled,
 	TbSquareRoundedNumber3Filled,
+	TbSquareRoundedNumber4Filled,
 } from 'react-icons/tb';
 import { HiOutlineUserGroup, HiOutlineLogout } from 'react-icons/hi';
 import logo from '../public/assets/ez-forms-logo.svg';
@@ -23,8 +24,8 @@ const SideBar = () => {
 			<li>
 				<Popover>
 					<PopoverTrigger asChild>
-						<Button className='p-4 sm:mb-6 bg-transparent items-center hover:opacity-60 hover:bg-transparent transition-opacity'>
-							<Image src={logo} alt={'ez-forms-logo'} className=' invert w-16 h-10' />
+						<Button className='sm:mb-6 bg-transparent items-center xl:hover:opacity-60 hover:bg-transparent transition-opacity'>
+							<Image src={logo} alt={'ez-forms-logo'} className=' invert' width={24} height={24} />
 						</Button>
 					</PopoverTrigger>
 					<PopoverContent side={'right'} className='sm:w-fit w-fit h-fit pt-4 px-4 pb-0 sm:my-0 mt-20 sm:ml-4 -ml-14'>
@@ -52,20 +53,42 @@ const SideBar = () => {
 								>
 									<Link href='form-1'>
 										<div
-											className={`hover:text-grayDark transition-colors text-5xl ${
-												pathname == '/forms/form-1' ? 'text-purpleDark' : ''
+											className={`hover:text-stone-600 transition-colors text-5xl relative ${
+												pathname == '/forms/form-1' ? 'text-purpleDark' : ' text-grayDark'
 											}`}
 										>
+											<div className='flex w-6 h-6 bg-white absolute top-3 left-3 -z-10'></div>
 											<TbSquareRoundedNumber1Filled />
 										</div>
 									</Link>
 									<Link href='form-2'>
 										<div
-											className={`hover:text-grayDark transition-colors text-5xl ${
-												pathname == '/forms/form-2' ? 'text-purpleDark' : ''
+											className={`hover:text-stone-600 transition-colors text-5xl relative ${
+												pathname == '/forms/form-2' ? 'text-purpleDark' : ' text-grayDark'
 											}`}
 										>
+											<div className='flex w-6 h-6 bg-white absolute top-3 left-3 -z-10'></div>
 											<TbSquareRoundedNumber2Filled />
+										</div>
+									</Link>
+									<Link href='form-3'>
+										<div
+											className={`hover:text-stone-600 transition-colors text-5xl relative ${
+												pathname == '/forms/form-3' ? 'text-purpleDark' : ' text-grayDark'
+											}`}
+										>
+											<div className='flex w-6 h-6 bg-white absolute top-3 left-3 -z-10'></div>
+											<TbSquareRoundedNumber3Filled />
+										</div>
+									</Link>
+									<Link href='form-4'>
+										<div
+											className={`hover:text-stone-600 transition-colors text-5xl relative ${
+												pathname == '/forms/form-4' ? 'text-purpleDark' : ' text-grayDark'
+											}`}
+										>
+											<div className='flex w-6 h-6 bg-white absolute top-3 left-3 -z-10'></div>
+											<TbSquareRoundedNumber4Filled />
 										</div>
 									</Link>
 								</PopoverContent>

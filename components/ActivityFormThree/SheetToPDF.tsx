@@ -10,7 +10,7 @@ import {
 	SheetClose,
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import { IFormTwo } from '@/types';
+import { IFormThree } from '@/types';
 import { Checkbox } from '@/components/ui/checkbox';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -18,7 +18,7 @@ import Image from 'next/image';
 import SchoolLogo from '../../public/assets/University_of_San_Carlos_logo.svg';
 
 type SheetToPDFProps = {
-	formContent: IFormTwo;
+	formContent: IFormThree;
 };
 
 const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
@@ -132,16 +132,14 @@ const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
 									</div>
 								</div>
 							</div>
-							<p className='font-semibold mt-1'>
-								Agenda: <span className='underline underline-offset-2 ml-1'>{formContent.agenda}</span>
-							</p>
+
 							<div className='flex w-full border border-dark p-1 mt-2 gap-2'>
 								<div className='flex flex-col font-semibold w-full gap-1'>
 									<div>
 										<p>1. Recommended by: </p>
 										<br />
 										<div className='border-b border-dark pb-1'>
-											<p className='text-center'>{formContent.recommendedBy}</p>
+											<p className='text-center'>{formContent.treasurer}</p>
 										</div>
 										<p>President of the Student Organization</p>
 										<p>(Signature over printed name)</p>
@@ -159,7 +157,7 @@ const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
 										<p>3. Noted by: </p>
 										<br />
 										<div className='border-b border-dark pb-1'>
-											<p className='text-center'>{formContent.notedBy}</p>
+											<p className='text-center'>{formContent.president}</p>
 										</div>
 										<p>Dean/Department Chair</p>
 										<p>(Signature over printed name)</p>
