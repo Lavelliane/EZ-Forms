@@ -16,12 +16,15 @@ import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import Image from 'next/image';
 import SchoolLogo from '../../public/assets/University_of_San_Carlos_logo.svg';
+import { Activity } from "./TableColumns"
+
 
 type SheetToPDFProps = {
 	formContent: IProgramFlow;
+	tableData: Activity[];
 };
 
-const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
+const SheetToPDF = ({ formContent, tableData }: SheetToPDFProps) => {
 	const pdfRef = useRef<HTMLDivElement>(null);
 	const [loader, setLoader] = React.useState(false);
 
@@ -98,6 +101,24 @@ const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
 								Position:{' '}
 								<span className='ml-1 font-normal'>{formContent.organizerPosition}</span>
 							</p>
+						</div>
+						<div className='flex w-full'>
+							<table className='mt-2 w-full border border-collapse'>
+							<thead>
+								<tr>
+								<th className='border border-collapse px-2 py-1'>Time Slot</th>
+								<th className='border border-collapse px-2 py-1'>Activity Name</th>
+								</tr>
+							</thead>
+							<tbody>
+								{tableData.map((activity) => (
+								<tr key={activity.id}>
+									<td className='border border-collapse px-2 py-1'>{activity.timeSlot}</td>
+									<td className='border border-collapse px-2 py-1'>{activity.activityName}</td>
+								</tr>
+								))}
+							</tbody>
+							</table>
 						</div>
 					</div>
 				</div>

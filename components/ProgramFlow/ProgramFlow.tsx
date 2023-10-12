@@ -25,15 +25,7 @@ import TabActivitySettings from './TabActivitySettings'
 import SheetToPDF from './SheetToPDF';
 import getProgramFlowFields from '@/mutations/getProgramFlowFields';
 import { Activity, columns } from "./TableColumns"
-import { start } from 'repl';
-
-async function getTableData(): Promise<Activity[]> {
-	// Fetch data from your API here.
-	return [
-
-	  // ...
-	]
-}
+import { v4 as uuidv4 } from 'uuid';
 
 const ProgramFlow = () => {
 	const [form, setForm] = useState<IProgramFlow>(defaultProgramFlow);
@@ -49,34 +41,42 @@ const ProgramFlow = () => {
 	const [tableData, setTableData] = useState<Activity[]>([]);
 	const [selectedMode, setSelectedMode] = useState<string>("face-to-face");
 
-
 	// ########### Input Box Form Updates
 	const onChange = (e: any) => {
 		setForm({ ...form, [e.target.id]: e.target.value });
 	};
 
-	// ########### API Fetch
+	// ########### Program Flow Table
 	const { mutate: generateProgramFlow, isLoading } = useMutation({
 		mutationFn: getProgramFlowFields,
 		onSuccess: (data) => {
-			console.log(data);
 			setTableData(data);
 		},
 	});
 
-	// ########### Program Flow Table
+	const setTableDataId = () => {
+	  	tableData.forEach((data) => {
+		  	if (!data.id) {
+				data.id = uuidv4();
+		  	}
+		});
+		setTableData(tableData);
+	};
+
+	const addEmptyRow = () => {
+		const newRow: Activity = {
+			activityName: 'Enter activity name here...',
+			timeSlot: '00:00 - 00:00',
+			id: uuidv4()
+		};
+		setTableData([...tableData, newRow]);
+	};
+
 	useEffect(() => {
-	  async function fetchData() {
-		try {
-		  const data = await getTableData();
-		  setTableData(data);
-		} catch (error) {
-		  console.error("Error fetching data:", error);
-		}
-	  }
-  
-	  fetchData();
-	}, []);
+		setTableDataId();
+		console.log(tableData)
+	  }, [tableData]);
+
 
 
 	// ########### Proficiency Level
@@ -143,8 +143,10 @@ const ProgramFlow = () => {
 				<CardDescription className='text-gray-600'>(Program Flow for General Activity Form 1)</CardDescription>
 			</CardHeader>
 
-			{/* ---------- Top Section ---------- */}
+
 			<CardContent className='flex flex-col gap-4 relative justify-center'>
+
+				{/* ---------- Top Section ---------- */}
 				<div className='flex flex-col w-full items-center gap-2'>
 					<div className='flex text-center items-center justify-center gap-2'>
 						<h4 className='font-semibold text-center text-sm'>Academic&#160;Year</h4>
@@ -274,6 +276,13 @@ const ProgramFlow = () => {
 								setSelectedTab={setSelectedMode}
 							/>
 							<div className='flex w-full justify-self-start'>
+								{!form.activityName || !form.time ? (
+									<p className=' text-red-500 text-xs'>Activity name, start and end times required.</p>
+								) : (
+									''
+								)}
+							</div>
+							<div className='flex w-full justify-self-start'>
 								<Button
 									type='submit'
 									onClick={async (e) => {
@@ -298,12 +307,15 @@ const ProgramFlow = () => {
 
 				{/* ---------- Table Section ---------- */}
 				<div className='flex sm:flex-row flex-col justify-center sm:gap-6 gap-2'>
-					<div className="flex items-center justify-center w-full py-10">
-						<DataTable columns={columns} data={tableData} />
+					<div className="flex items-center justify-center w-full">
+						<DataTable 
+							columns={columns} 
+							data={tableData} 
+							addEmptyRow={addEmptyRow} 
+						/>
 					</div>
 				</div>
 				<Separator className='my-2' />
-				<Separator className='my-4' />
 				<div className='flex flex-col items-center justify-evenly w-full my-4 text-justify'>
 					<p className='text-xs'>
 						<span className='font-semibold'>DATA PRIVACY CONSENT:</span> I give my consent to the University of San
@@ -317,7 +329,7 @@ const ProgramFlow = () => {
 					<Button variant={'outline'} type='button'>
 						Reset
 					</Button>
-					<SheetToPDF formContent={form} />
+					<SheetToPDF formContent={form} tableData={tableData} />
 				</div>
 			</CardContent>
 		</Card>

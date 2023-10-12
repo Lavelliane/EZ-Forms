@@ -56,7 +56,7 @@ export function TabActivitySettings({
                     <span className="flex items-center gap-2"><Switch /><Label htmlFor="name">Attendance</Label></span>
                 </div>
                 <div>
-                    <Separator orientation='vertical' className="bg-slate-400" />
+                    <Separator orientation='vertical' className="bg-slate-300" />
                 </div>
                 <div className="flex flex-col gap-3 justify-items-start w-1/2 pl-5">
                     <span className="flex items-center gap-2"><Switch /><Label htmlFor="name">Games</Label></span>
@@ -84,7 +84,7 @@ export function TabActivitySettings({
                     <span className="flex items-center gap-2"><Switch /><Label htmlFor="name">Group Activities</Label></span>
                 </div>
                 <div>
-                    <Separator orientation='vertical' className="bg-slate-400"/>
+                    <Separator orientation='vertical' className="bg-slate-300"/>
                 </div>
                 <div className="flex flex-col gap-3 justify-items-start w-1/2 pl-5">
                     <span className="flex items-center gap-2"><Switch /><Label htmlFor="name">Quizzes</Label></span>

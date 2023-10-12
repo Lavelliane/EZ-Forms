@@ -75,7 +75,7 @@ export function SliderProficiencyLevel({
             </Label>
             <Image
               src={require(`../../public/assets/wiz-${proficiencyLevels[selectedLevelInternal - 1].label.toLowerCase()}.svg`)}
-              height={225}
+              height={250}
               alt="Where did the wizard go?"
             />
           </CardContent>
