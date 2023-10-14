@@ -16,6 +16,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import TopBar from './TopBar';
+import { UserButton } from '@clerk/nextjs';
 
 const SideBar = () => {
 	const pathname = usePathname();
@@ -136,7 +137,8 @@ const SideBar = () => {
 					</TooltipContent>
 				</Tooltip>
 				<div className='h-full w-full sm:flex hidden'></div>
-				<Tooltip>
+				<UserButton afterSignOutUrl='/' />
+				{/* <Tooltip>
 					<TooltipTrigger>
 						<li>
 							<Link href='settings'>
@@ -171,7 +173,7 @@ const SideBar = () => {
 					<TooltipContent sideOffset={4} side={'left'} className='bg-grayLighter text-dark p-3 border-none rounded-xl'>
 						Logout
 					</TooltipContent>
-				</Tooltip>
+				</Tooltip> */}
 			</TooltipProvider>
 		</ul>
 	);
