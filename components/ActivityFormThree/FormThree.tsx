@@ -1,4 +1,3 @@
-'use client';
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -14,6 +13,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import { IFormThree, FormOneRequest } from '@/types';
 import { defaultForm3 } from '../../default';
+import { CashFlow } from './Cashflow';
 import SheetToPDF from './SheetToPDF';
 
 const FormTwo = () => {
@@ -198,43 +198,44 @@ const FormTwo = () => {
 					</div>
 					<div className='grid w-full sm:max-w-sm items-center gap-1.5'></div>
 				</div>
-
-				<Separator className='my-4' />
+				<Separator className='my-2' />
+				<CashFlow onChange={onChange} />
+				<Separator className='my-2' />
 				<div className='flex flex-col items-center justify-evenly w-full '>
 					<h4 className='font-semibold text-center'>Signatories</h4>
 					<div className='flex sm:flex-row flex-col w-full gap-4 mt-4'>
-						<div className='flex rounded-lg bg-purple-100 p-4 text-dark w-full hover:shadow-md focus-within:shadow-md transition-shadow items-end justify-center gap-4'>
-							<div>
+						<div className='flex sm:flex-row flex-col rounded-lg bg-gray-100 p-4 text-dark w-full hover:shadow-md focus-within:shadow-md transition-shadow items-end justify-center gap-4'>
+							<div className='w-full'>
 								<label htmlFor='president' className='text-sm font-medium leading-none'>
 									Submitted&#160;by:
 								</label>
 								<Input
 									id='president'
 									placeholder='Enter complete name'
-									className='rounded-none border-t-0 border-x-0 border-gray-400 bg-transparent text-dark text-sm font-medium leading-none focus-visible:bg-transparent'
+									className='rounded-none border-t-0 border-x-0 border-gray-400 bg-transparent text-dark text-sm font-medium leading-none focus-visible:bg-transparent text-center focus-within:placeholder-transparent'
 									onChange={onChange}
 								/>
 								<p className='text-xs font-medium leading-none justify-center mt-2 text-center'>President</p>
 							</div>
-							<div>
+							<div className='w-full'>
 								<Input
 									id='treasurer'
 									placeholder='Enter complete name'
-									className='rounded-none border-t-0 border-x-0 border-gray-400 bg-transparent text-dark text-sm font-medium leading-none focus-visible:bg-transparent'
+									className='rounded-none border-t-0 border-x-0 border-gray-400 bg-transparent text-dark text-sm font-medium leading-none focus-visible:bg-transparent text-center focus-within:placeholder-transparent'
 									onChange={onChange}
 								/>
 								<p className='text-xs font-medium leading-none justify-center mt-2 text-center'>Faculty-Adviser</p>
 							</div>
 						</div>
 
-						<div className='rounded-lg bg-purple-100 p-4 text-dark w-1/2 hover:shadow-md focus-within:shadow-md transition-shadow'>
+						<div className='rounded-lg bg-gray-100 p-4 text-dark md:w-1/2 w-full hover:shadow-md focus-within:shadow-md transition-shadow'>
 							<label htmlFor='endorsedBy' className='text-sm font-medium leading-none'>
 								Endorsed&#160;by:
 							</label>
 							<Input
 								id='endorsedBy'
 								placeholder='Enter complete name'
-								className='rounded-none border-t-0 border-x-0 border-gray-400 bg-transparent text-dark text-sm font-medium leading-none focus-visible:bg-transparent'
+								className='rounded-none border-t-0 border-x-0 border-gray-400 bg-transparent text-dark text-sm font-medium leading-none focus-visible:bg-transparent text-center focus-within:placeholder-transparent'
 								onChange={onChange}
 							/>
 							<p className='text-xs font-medium leading-none justify-center mt-2 text-center'>Dean/Department Chair</p>

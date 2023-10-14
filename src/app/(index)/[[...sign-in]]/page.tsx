@@ -1,30 +1,14 @@
-'use client';
 import { SignIn, useAuth } from '@clerk/nextjs';
 import SideBar from '../../../../components/SideBar';
 import React from 'react';
-import Lottie from 'react-lottie';
-import * as animationData from '../../../components/animation_lnmslog7.json';
 
-export default function Page({ children }: { children: React.ReactNode }) {
-	const { getToken, isLoaded, isSignedIn } = useAuth();
-
-	const defaultOptions = {
-		loop: true,
-		autoplay: true,
-		animationData: animationData,
-		rendererSettings: {
-			preserveAspectRatio: 'xMidYMid slice',
-		},
-	};
+export default function Page() {
+	const { isLoaded, isSignedIn } = useAuth();
 
 	if (!isLoaded) {
-		return (
-			<div className='w-full h-screen items-center flex'>
-				<p>here</p>
-				<Lottie options={defaultOptions} height={400} width={400} />
-			</div>
-		);
+		return null;
 	}
+
 	return (
 		<div className='flex items-center justify-center h-screen'>
 			{isSignedIn ? (
@@ -32,7 +16,7 @@ export default function Page({ children }: { children: React.ReactNode }) {
 					<div className='sm:h-full h-fit sm:w-fit w-full sm:p-6 p-2 fixed z-20'>
 						<SideBar />
 					</div>
-					<div className='sm:p-6 p-2 h-fit w-full'>{children}</div>
+					<div className='sm:p-6 p-2 h-fit w-full'></div>
 				</div>
 			) : (
 				<SignIn />

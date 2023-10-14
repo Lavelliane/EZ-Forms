@@ -23,8 +23,8 @@ const SheetEzForms = () => {
 				</Button>
 			</SheetTrigger>
 			<SheetContent className='overflow-y-scroll'>
-				<SheetHeader>
-					<Image src={logo} alt='ez-forms logo' className='lg:w-full w-24 m-auto' />
+				<SheetHeader className='flex flex-col items-center justify-center'>
+					<Image src={logo} alt='ez-forms logo' className='m-auto' width={120} height={40} />
 					<SheetTitle>EZ-FORMS</SheetTitle>
 					<SheetDescription>Generate&#160;|&#160;Print&#160;|&#160;Submit</SheetDescription>
 				</SheetHeader>

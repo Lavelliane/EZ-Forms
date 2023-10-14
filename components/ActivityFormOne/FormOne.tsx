@@ -1,4 +1,3 @@
-'use client';
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -9,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { CustomTimePicker } from '@/components/ui/time-picker';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { CalendarIcon } from 'lucide-react';
-import { format } from 'date-fns';
+import { format, set } from 'date-fns';
 import { Calendar } from '@/components/ui/calendar';
 import PopoverNature from '../../components/PopoverNature';
 import { cn } from '@/lib/utils';
@@ -23,6 +22,7 @@ import getFormOneFields from '@/mutations/getFormOneFields';
 
 const FormOne = () => {
 	const [form, setForm] = useState<IFormOne>(defaultForm1);
+	const [loading, setLoading] = useState(true);
 	const [academicYear, setAcademicYear] = useState('');
 	const [isCheckedFirstSem, setIsCheckedFirstSem] = useState(false);
 	const [isCheckedSecondSem, setIsCheckedSecondSem] = useState(false);
@@ -137,7 +137,7 @@ const FormOne = () => {
 	useEffect(() => {
 		setForm({ ...form, ['time']: startTime + ' - ' + endTime });
 	}, [startTime, endTime]);
-
+	console.log(date);
 	useEffect(() => {
 		const natureForm = [
 			isCheckedScientia && 'scientia',
@@ -150,6 +150,36 @@ const FormOne = () => {
 
 		setForm({ ...form, ['natureOfActivity']: natureForm });
 	}, [isCheckedScientia, isCheckedVirtus, isCheckedDevotio, isCheckedOrganization]);
+
+	// Load the object from local storage when the component mounts
+	useEffect(() => {
+		const savedForm = JSON.parse(localStorage.getItem('formOne') || '{}');
+		if (savedForm) {
+			setForm(savedForm);
+			setIsCheckedFirstSem(savedForm.semester === 'firstSem');
+			setIsCheckedSecondSem(savedForm.semester === 'secondSem');
+			setIsCheckedSummerSem(savedForm.semester === 'summerSem');
+			setIsCheckedCo(savedForm.curricular === 'coCurricular');
+			setIsCheckedExtra(savedForm.curricular === 'extraCurricular');
+			setIsCheckedIn(savedForm.campus === 'inCampus');
+			setIsCheckedOff(savedForm.campus === 'offCampus');
+			setIsCheckedScientia(savedForm.natureOfActivity.includes('scientia'));
+			setIsCheckedVirtus(savedForm.natureOfActivity.includes('virtus'));
+			setIsCheckedDevotio(savedForm.natureOfActivity.includes('devotio'));
+			setIsCheckedOrganization(savedForm.natureOfActivity.includes('organization'));
+			setIsCheckedOrganizer(savedForm.involvement === 'organizer');
+			setIsCheckedParticipant(savedForm.involvement === 'participant');
+			setStartTime(savedForm.time?.split(' - ')[0]);
+			setEndTime(savedForm.time?.split(' - ')[1]);
+		}
+		setLoading(false);
+	}, []);
+
+	useEffect(() => {
+		if (!loading && form) {
+			localStorage.setItem('formOne', JSON.stringify(form));
+		}
+	}, [form]);
 
 	return (
 		<Card className='flex flex-grow flex-col bg-white hover:shadow-md transition-shadow w-fit h-fit z-10 py-4 sm:px-8 px-0'>
@@ -165,7 +195,7 @@ const FormOne = () => {
 						<Input
 							type='text'
 							id='academicYear'
-							value={form.academicYear}
+							value={form.academicYear || ''}
 							placeholder={academicYear}
 							onChange={onChange}
 							className='w-28 text-center text-sm'
@@ -231,7 +261,13 @@ const FormOne = () => {
 				<div className='flex sm:flex-row flex-col justify-center gap-10 sm:items-end items-center'>
 					<div className='grid w-full sm:max-w-sm items-center gap-1.5'>
 						<Label htmlFor='organizationName'>Organization Name</Label>
-						<Input type='text' id='organizationName' placeholder='Enter name of organization' onChange={onChange} />
+						<Input
+							type='text'
+							id='organizationName'
+							placeholder='Enter name of organization'
+							onChange={onChange}
+							value={form.organizationName || ''}
+						/>
 					</div>
 					<div className='flex flex-1 w-full sm:max-w-sm items-center h-10'>
 						<div className='flex items-center w-full justify-evenly gap-1'>
@@ -280,11 +316,23 @@ const FormOne = () => {
 				>
 					<div className='grid w-full sm:max-w-sm items-center gap-1.5'>
 						<Label htmlFor='department'>Department</Label>
-						<Input type='text' id='department' placeholder='Enter name of department' onChange={onChange} />
+						<Input
+							type='text'
+							id='department'
+							value={form.department || ''}
+							placeholder='Enter name of department'
+							onChange={onChange}
+						/>
 					</div>
 					<div className='grid w-full sm:max-w-sm items-center gap-1.5'>
 						<Label htmlFor='school'>School</Label>
-						<Input type='text' id='school' placeholder='Enter name of school/college' onChange={onChange} />
+						<Input
+							type='text'
+							id='school'
+							value={form.school || ''}
+							placeholder='Enter name of school/college'
+							onChange={onChange}
+						/>
 					</div>
 				</div>
 				<div className='flex sm:flex-row flex-col justify-center sm:gap-10 gap-4 items-center'>
@@ -319,7 +367,13 @@ const FormOne = () => {
 				<div className='flex sm:flex-row flex-col justify-center sm:gap-10 gap-4 sm:items-end items-center'>
 					<div className='grid w-full sm:max-w-sm items-center gap-1.5'>
 						<Label htmlFor='venue'>Venue</Label>
-						<Input type='text' id='venue' placeholder='Enter name of venue' onChange={onChange} />
+						<Input
+							type='text'
+							id='venue'
+							value={form.venue || ''}
+							placeholder='Enter name of venue'
+							onChange={onChange}
+						/>
 					</div>
 					<div className='flex flex-1 sm:max-w-sm items-center h-10'>
 						<div className='flex items-center w-full justify-evenly gap-1'>
@@ -364,7 +418,13 @@ const FormOne = () => {
 				<div className='flex sm:flex-row flex-col justify-center sm:gap-10 gap-4 sm:items-end items-center'>
 					<div className='grid w-full md:sm:max-w-sm items-center gap-1.5'>
 						<Label htmlFor='activityName'>Activity Name</Label>
-						<Input type='text' id='activityName' placeholder='Enter name of the activity' onChange={onChange} />
+						<Input
+							type='text'
+							id='activityName'
+							value={form.activityName || ''}
+							placeholder='Enter name of the activity'
+							onChange={onChange}
+						/>
 					</div>
 					<div className='md:flex hidden flex-1 sm:max-w-sm items-center h-10'></div>
 				</div>
@@ -496,6 +556,7 @@ const FormOne = () => {
 							<Input
 								type='text'
 								id='participants'
+								value={isCheckedOrganizer ? form.participants || '' : ''}
 								placeholder='Who are the expected participants?'
 								onChange={onChange}
 							/>
@@ -505,6 +566,7 @@ const FormOne = () => {
 							<Input
 								type='number'
 								id='numberOfParticipants'
+								value={isCheckedOrganizer ? form.numberOfParticipants || '' : ''}
 								placeholder='Enter number of participants'
 								onChange={onChange}
 							/>
@@ -537,6 +599,7 @@ const FormOne = () => {
 							<Input
 								type='text'
 								id='sponsor'
+								value={isCheckedParticipant ? form.sponsor || '' : ''}
 								placeholder='Who is the sponsoring organization/office?'
 								onChange={onChange}
 							/>
@@ -546,6 +609,7 @@ const FormOne = () => {
 							<Input
 								type='number'
 								id='numberOfParticipants'
+								value={isCheckedParticipant ? form.numberOfParticipants || '' : ''}
 								placeholder='Enter number of participants'
 								onChange={onChange}
 							/>
@@ -565,16 +629,16 @@ const FormOne = () => {
 							value={form.description || ''}
 						/>
 						{!form.activityName || !form.organizationName ? (
-							<p className=' text-red-500 text-xs'>Organization and activity names required.</p>
+							<p className=' text-red-500 text-xs'>CharmScript requires organization and activity names.</p>
 						) : (
 							''
 						)}
 						<Button
 							disabled={!form.activityName || !form.organizationName || isLoading}
 							type='submit'
-							onClick={async (e) => {
+							onClick={(e) => {
 								setOutputType('description');
-								await generateFormOne({
+								generateFormOne({
 									eventName: form.activityName,
 									orgName: form.organizationName,
 									outputType: 'description',
@@ -598,16 +662,16 @@ const FormOne = () => {
 							value={form.objective || ''}
 						/>
 						{!form.activityName || !form.organizationName ? (
-							<p className=' text-red-500 text-xs'>Organization and activity names required.</p>
+							<p className=' text-red-500 text-xs'>CharmScript requires organization and activity names.</p>
 						) : (
 							''
 						)}
 						<Button
 							disabled={!form.activityName || !form.organizationName || isLoading}
 							type='submit'
-							onClick={async (e) => {
+							onClick={(e) => {
 								setOutputType('objective');
-								await generateFormOne({
+								generateFormOne({
 									eventName: form.activityName,
 									orgName: form.organizationName,
 									outputType: 'objective',
@@ -624,40 +688,43 @@ const FormOne = () => {
 				<div className='flex flex-col items-center justify-evenly w-full '>
 					<h4 className='font-semibold text-center'>Signatories</h4>
 					<div className='flex sm:flex-row flex-col w-full gap-4 mt-4'>
-						<div className='rounded-lg bg-purple-100 p-4 text-dark w-full hover:shadow-md focus-within:shadow-md transition-shadow'>
+						<div className='rounded-lg bg-gray-100 p-4 text-dark w-full hover:shadow-md focus-within:shadow-md transition-shadow'>
 							<label htmlFor='recommendedBy' className='text-sm font-medium leading-none'>
 								Recommended&#160;by:
 							</label>
 							<Input
 								id='recommendedBy'
 								placeholder='Enter complete name'
-								className='rounded-none border-t-0 border-x-0 border-gray-400 bg-transparent text-dark text-sm font-medium leading-none focus-visible:bg-transparent'
+								value={form.recommendedBy || ''}
+								className='rounded-none border-t-0 border-x-0 border-gray-400 bg-transparent text-dark text-sm font-medium leading-none focus-visible:bg-transparent text-center focus-within:placeholder-transparent'
 								onChange={onChange}
 							/>
 							<p className='text-xs font-medium leading-none justify-center mt-2 text-center'>
 								President of the Student Organization
 							</p>
 						</div>
-						<div className='rounded-lg bg-purple-100 p-4 text-dark w-full hover:shadow-md focus-within:shadow-md transition-shadow'>
+						<div className='rounded-lg bg-gray-100 p-4 text-dark w-full hover:shadow-md focus-within:shadow-md transition-shadow'>
 							<label htmlFor='endorsedBy' className='text-sm font-medium leading-none'>
 								Endorsed&#160;by:
 							</label>
 							<Input
 								id='endorsedBy'
 								placeholder='Enter complete name'
-								className='rounded-none border-t-0 border-x-0 border-gray-400 bg-transparent text-dark text-sm font-medium leading-none focus-visible:bg-transparent'
+								value={form.endorsedBy || ''}
+								className='rounded-none border-t-0 border-x-0 border-gray-400 bg-transparent text-dark text-sm font-medium leading-none focus-visible:bg-transparent text-center focus-within:placeholder-transparent'
 								onChange={onChange}
 							/>
 							<p className='text-xs font-medium leading-none justify-center mt-2 text-center'>Faculty-Adviser</p>
 						</div>
-						<div className='rounded-lg bg-purple-100 p-4 text-dark w-full hover:shadow-md focus-within:shadow-md transition-shadow'>
+						<div className='rounded-lg bg-gray-100 p-4 text-dark w-full hover:shadow-md focus-within:shadow-md transition-shadow'>
 							<label htmlFor='notedBy' className='text-sm font-medium leading-none'>
 								Noted&#160;by:
 							</label>
 							<Input
 								id='notedBy'
 								placeholder='Enter complete name'
-								className='rounded-none border-t-0 border-x-0 border-gray-400 bg-transparent text-dark text-sm font-medium leading-none focus-visible:bg-transparent'
+								value={form.notedBy || ''}
+								className='rounded-none border-t-0 border-x-0 border-gray-400 bg-transparent text-dark text-sm font-medium leading-none focus-visible:bg-transparent text-center focus-within:placeholder-transparent'
 								onChange={onChange}
 							/>
 							<p className='text-xs font-medium leading-none justify-center mt-2 text-center'>Dean/Department Chair</p>
@@ -674,7 +741,29 @@ const FormOne = () => {
 					</p>
 				</div>
 				<div className='flex items-center justify-between w-full text-justify'>
-					<Button variant={'outline'} type='button'>
+					<Button
+						variant={'outline'}
+						type='button'
+						onClick={() => {
+							localStorage.removeItem('formOne');
+							setForm(defaultForm1);
+							setIsCheckedFirstSem(false);
+							setIsCheckedSecondSem(false);
+							setIsCheckedSummerSem(false);
+							setIsCheckedCo(false);
+							setIsCheckedExtra(false);
+							setIsCheckedIn(false);
+							setIsCheckedOff(false);
+							setIsCheckedScientia(false);
+							setIsCheckedVirtus(false);
+							setIsCheckedDevotio(false);
+							setIsCheckedOrganization(false);
+							setIsCheckedOrganizer(false);
+							setIsCheckedParticipant(false);
+							setStartTime('');
+							setEndTime('');
+						}}
+					>
 						Reset
 					</Button>
 					<SheetToPDF formContent={form} />

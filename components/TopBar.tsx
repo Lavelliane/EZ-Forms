@@ -41,7 +41,7 @@ export default function TopBar() {
 					<NavigationMenuContent className='w-full'>
 						<ul className='flex flex-row p-6 w-[500px] items-center justify-center'>
 							<li className='flex flex-col w-full p-4 text-center justify-center items-center rounded-md bg-gradient-to-b from-purple-50 to-purple-100'>
-								<Image src={logo} alt='ez-forms logo' className='w-24 h-40' />
+								<Image src={logo} alt='ez-forms logo' width={120} height={40} />
 								<h2 className='font-bold text-xl'>EZ-FORMS</h2>
 								<p className='font-light text-xs'>Generate&#160;|&#160;Print&#160;|&#160;Submit</p>
 							</li>

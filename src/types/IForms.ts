@@ -55,13 +55,12 @@ export interface IFormThree {
 	cashInflow: [Budget];
 	cashOutflow: [Budget];
 	netCashFlow: string;
-	involvement: string;
 	treasurer: string;
 	president: string;
 	endorsedBy: string;
 }
 
 interface Budget {
-	particulars: string;
+	particular: string;
 	amount: string;
 }

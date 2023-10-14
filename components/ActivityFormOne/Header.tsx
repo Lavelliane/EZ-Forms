@@ -1,4 +1,3 @@
-import React, { Suspense } from 'react';
 import CardSchool from '../CardSchool';
 import CardActivitySection from '../CardActivitySection';
 import FormOne from './FormOne';

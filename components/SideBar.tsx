@@ -52,7 +52,7 @@ const SideBar = () => {
 									side={'right'}
 									className='sm:w-fit w-fit h-fit bg-transparent border-none shadow-none sm:translate-y-0 translate-y-14 sm:translate-x-0 -translate-x-[67px]'
 								>
-									<Link href='form-1'>
+									<Link href='/forms/form-1'>
 										<div
 											className={`hover:text-stone-600 transition-colors text-5xl relative ${
 												pathname == '/forms/form-1' ? 'text-purpleDark' : ' text-grayDark'
@@ -62,7 +62,7 @@ const SideBar = () => {
 											<TbSquareRoundedNumber1Filled />
 										</div>
 									</Link>
-									<Link href='form-2'>
+									<Link href='/forms/form-2'>
 										<div
 											className={`hover:text-stone-600 transition-colors text-5xl relative ${
 												pathname == '/forms/form-2' ? 'text-purpleDark' : ' text-grayDark'
@@ -72,7 +72,7 @@ const SideBar = () => {
 											<TbSquareRoundedNumber2Filled />
 										</div>
 									</Link>
-									<Link href='form-3'>
+									<Link href='/forms/form-3'>
 										<div
 											className={`hover:text-stone-600 transition-colors text-5xl relative ${
 												pathname == '/forms/form-3' ? 'text-purpleDark' : ' text-grayDark'
@@ -82,7 +82,7 @@ const SideBar = () => {
 											<TbSquareRoundedNumber3Filled />
 										</div>
 									</Link>
-									<Link href='form-4'>
+									<Link href='/forms/form-4'>
 										<div
 											className={`hover:text-stone-600 transition-colors text-5xl relative ${
 												pathname == '/forms/form-4' ? 'text-purpleDark' : ' text-grayDark'
@@ -101,7 +101,7 @@ const SideBar = () => {
 					</TooltipContent>
 				</Tooltip>
 				<Tooltip>
-					<TooltipTrigger>
+					<TooltipTrigger asChild>
 						<li>
 							<Link href='program-flow'>
 								<div
@@ -119,7 +119,7 @@ const SideBar = () => {
 					</TooltipContent>
 				</Tooltip>
 				<Tooltip>
-					<TooltipTrigger>
+					<TooltipTrigger asChild>
 						<li>
 							<Link href='participants'>
 								<div
