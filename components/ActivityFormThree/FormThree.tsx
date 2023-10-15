@@ -297,7 +297,19 @@ const FormThree = () => {
 					</p>
 				</div>
 				<div className='flex items-center justify-between w-full text-justify'>
-					<Button variant={'outline'} type='button'>
+					<Button
+						variant={'outline'}
+						type='button'
+						onClick={() => {
+							localStorage.removeItem('formThree');
+							setForm(defaultForm3);
+							setIsCheckedFirstSem(false);
+							setIsCheckedSecondSem(false);
+							setIsCheckedSummerSem(false);
+							setStartTime('');
+							setEndTime('');
+						}}
+					>
 						Reset
 					</Button>
 					<SheetToPDF formContent={form} />
