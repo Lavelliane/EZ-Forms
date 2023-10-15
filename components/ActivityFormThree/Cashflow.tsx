@@ -77,17 +77,13 @@ export function CashFlow({ onChange, form }: CashFlowProps) {
 	}, [inflowParticulars, outflowParticulars]);
 
 	useEffect(() => {
-		if (form.cashInflow) {
+		if (form.cashInflow && form.cashInflow?.length > 1) {
 			setInflowParticulars(form.cashInflow);
-			console.log(inflowParticulars);
-			console.log(form.cashInflow);
 		}
-		if (form.cashOutflow) {
+		if (form.cashOutflow && form.cashOutflow?.length > 1) {
 			setOutflowParticulars(form.cashOutflow);
 		}
-		if (form.netCashFlow) {
-			setNetCashFlow(form.netCashFlow);
-		}
+		setNetCashFlow(form.netCashFlow);
 	}, [form.cashInflow, form.cashOutflow, form.netCashFlow]);
 
 	return (
