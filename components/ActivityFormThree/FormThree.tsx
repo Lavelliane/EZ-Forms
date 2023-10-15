@@ -16,7 +16,7 @@ import { defaultForm3 } from '../../default';
 import { CashFlow } from './Cashflow';
 import SheetToPDF from './SheetToPDF';
 
-const FormTwo = () => {
+const FormThree = () => {
 	const [form, setForm] = useState<IFormThree>(defaultForm3);
 	const [academicYear, setAcademicYear] = useState('');
 	const [isCheckedFirstSem, setIsCheckedFirstSem] = useState(false);
@@ -25,6 +25,7 @@ const FormTwo = () => {
 	const [startTime, setStartTime] = useState('');
 	const [endTime, setEndTime] = useState('');
 	const [date, setDate] = useState<Date>();
+	const [loading, setLoading] = useState(true);
 
 	const onCheckedSemester = (e: any) => {
 		if (e.target.id === 'firstSem') {
@@ -75,6 +76,26 @@ const FormTwo = () => {
 		setForm({ ...form, ['time']: startTime + ' - ' + endTime });
 	}, [startTime, endTime]);
 
+	// Load the object from local storage when the component mounts
+	useEffect(() => {
+		const savedForm = JSON.parse(localStorage.getItem('formThree') || '{}');
+		if (savedForm) {
+			setForm(savedForm);
+			setIsCheckedFirstSem(savedForm.semester === 'firstSem');
+			setIsCheckedSecondSem(savedForm.semester === 'secondSem');
+			setIsCheckedSummerSem(savedForm.semester === 'summerSem');
+			setStartTime(savedForm.time?.split(' - ')[0]);
+			setEndTime(savedForm.time?.split(' - ')[1]);
+		}
+		setLoading(false);
+	}, []);
+
+	useEffect(() => {
+		if (!loading && form) {
+			localStorage.setItem('formThree', JSON.stringify(form));
+		}
+	}, [form]);
+
 	return (
 		<Card className='flex flex-grow flex-col bg-white hover:shadow-md transition-shadow w-fit h-fit z-10 py-4 sm:px-8 px-0'>
 			<CardHeader className='text-center'>
@@ -89,7 +110,7 @@ const FormTwo = () => {
 						<Input
 							type='text'
 							id='academicYear'
-							value={form.academicYear}
+							value={form.academicYear || ''}
 							placeholder={academicYear}
 							onChange={onChange}
 							className='w-28 text-center text-sm'
@@ -155,11 +176,23 @@ const FormTwo = () => {
 				<div className='flex sm:flex-row flex-col justify-center sm:gap-10 gap-4 items-center'>
 					<div className='grid w-full sm:max-w-sm items-center gap-1.5'>
 						<Label htmlFor='organizationName'>Organization Name</Label>
-						<Input type='text' id='organizationName' placeholder='Enter name of organization' onChange={onChange} />
+						<Input
+							type='text'
+							id='organizationName'
+							value={form.organizationName || ''}
+							placeholder='Enter name of organization'
+							onChange={onChange}
+						/>
 					</div>
 					<div className='grid w-full sm:max-w-sm items-center gap-1.5'>
-						<Label htmlFor='activityName'>Activity Name</Label>
-						<Input type='text' id='activityName' placeholder='Enter name of the activity' onChange={onChange} />
+						<Label htmlFor='typeOfActivity'>Type of Activity</Label>
+						<Input
+							type='text'
+							id='typeOfActivity'
+							value={form.typeOfActivity || ''}
+							placeholder='Enter name of the activity'
+							onChange={onChange}
+						/>
 					</div>
 				</div>
 				<div className='flex sm:flex-row flex-col justify-center sm:gap-10 gap-4 items-center'>
@@ -194,12 +227,18 @@ const FormTwo = () => {
 				<div className='flex sm:flex-row flex-col justify-center gap-10 sm:items-end items-center'>
 					<div className='grid w-full sm:max-w-sm items-center gap-1.5'>
 						<Label htmlFor='venue'>Venue</Label>
-						<Input type='text' id='venue' placeholder='Enter name of venue' onChange={onChange} />
+						<Input
+							type='text'
+							id='venue'
+							value={form.venue || ''}
+							placeholder='Enter name of venue'
+							onChange={onChange}
+						/>
 					</div>
 					<div className='grid w-full sm:max-w-sm items-center gap-1.5'></div>
 				</div>
 				<Separator className='my-2' />
-				<CashFlow onChange={onChange} />
+				<CashFlow onChange={onChange} form={form} />
 				<Separator className='my-2' />
 				<div className='flex flex-col items-center justify-evenly w-full '>
 					<h4 className='font-semibold text-center'>Signatories</h4>
@@ -211,6 +250,7 @@ const FormTwo = () => {
 								</label>
 								<Input
 									id='president'
+									value={form.president || ''}
 									placeholder='Enter complete name'
 									className='rounded-none border-t-0 border-x-0 border-gray-400 bg-transparent text-dark text-sm font-medium leading-none focus-visible:bg-transparent text-center focus-within:placeholder-transparent'
 									onChange={onChange}
@@ -220,6 +260,7 @@ const FormTwo = () => {
 							<div className='w-full'>
 								<Input
 									id='treasurer'
+									value={form.treasurer || ''}
 									placeholder='Enter complete name'
 									className='rounded-none border-t-0 border-x-0 border-gray-400 bg-transparent text-dark text-sm font-medium leading-none focus-visible:bg-transparent text-center focus-within:placeholder-transparent'
 									onChange={onChange}
@@ -234,6 +275,7 @@ const FormTwo = () => {
 							</label>
 							<Input
 								id='endorsedBy'
+								value={form.endorsedBy || ''}
 								placeholder='Enter complete name'
 								className='rounded-none border-t-0 border-x-0 border-gray-400 bg-transparent text-dark text-sm font-medium leading-none focus-visible:bg-transparent text-center focus-within:placeholder-transparent'
 								onChange={onChange}
@@ -265,4 +307,4 @@ const FormTwo = () => {
 	);
 };
 
-export default FormTwo;
+export default FormThree;

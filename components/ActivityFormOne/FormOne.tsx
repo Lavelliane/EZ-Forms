@@ -163,10 +163,10 @@ const FormOne = () => {
 			setIsCheckedExtra(savedForm.curricular === 'extraCurricular');
 			setIsCheckedIn(savedForm.campus === 'inCampus');
 			setIsCheckedOff(savedForm.campus === 'offCampus');
-			setIsCheckedScientia(savedForm.natureOfActivity.includes('scientia'));
-			setIsCheckedVirtus(savedForm.natureOfActivity.includes('virtus'));
-			setIsCheckedDevotio(savedForm.natureOfActivity.includes('devotio'));
-			setIsCheckedOrganization(savedForm.natureOfActivity.includes('organization'));
+			setIsCheckedScientia(savedForm.natureOfActivity?.includes('scientia'));
+			setIsCheckedVirtus(savedForm.natureOfActivity?.includes('virtus'));
+			setIsCheckedDevotio(savedForm.natureOfActivity?.includes('devotio'));
+			setIsCheckedOrganization(savedForm.natureOfActivity?.includes('organization'));
 			setIsCheckedOrganizer(savedForm.involvement === 'organizer');
 			setIsCheckedParticipant(savedForm.involvement === 'participant');
 			setStartTime(savedForm.time?.split(' - ')[0]);

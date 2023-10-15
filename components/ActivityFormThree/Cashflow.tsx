@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Table, TableCaption, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { IoRemoveCircleOutline } from 'react-icons/io5';
+import { IFormThree } from '@/types';
 
 interface Particular {
 	particular: string;
@@ -11,15 +12,17 @@ interface Particular {
 
 interface CashFlowProps {
 	onChange: (e: any) => void;
+	form: IFormThree;
 }
 
-export function CashFlow({ onChange }: CashFlowProps) {
+export function CashFlow({ onChange, form }: CashFlowProps) {
 	const [inflowParticulars, setInflowParticulars] = useState<Particular[]>([]);
 	const [outflowParticulars, setOutflowParticulars] = useState<Particular[]>([]);
 	const [newInflowParticular, setNewInflowParticular] = useState('');
 	const [newInflowAmount, setNewInflowAmount] = useState('');
 	const [newOutflowParticular, setNewOutflowParticular] = useState('');
 	const [newOutflowAmount, setNewOutflowAmount] = useState('');
+	const [netCashFlow, setNetCashFlow] = useState('');
 
 	const addInflowParticular = () => {
 		if (newInflowParticular && newInflowAmount) {
@@ -51,21 +54,41 @@ export function CashFlow({ onChange }: CashFlowProps) {
 		const updatedParticulars = [...inflowParticulars];
 		updatedParticulars.splice(index, 1);
 		setInflowParticulars(updatedParticulars);
+		onChange({ target: { id: 'cashInflow', value: updatedParticulars } });
 	};
-
+	console.log(form);
 	const removeOutflowParticular = (index: number) => {
 		const updatedParticulars = [...outflowParticulars];
 		updatedParticulars.splice(index, 1);
 		setOutflowParticulars(updatedParticulars);
+		onChange({ target: { id: 'cashOutflow', value: updatedParticulars } });
 	};
 
 	const calculateNetCashFlow = () => {
 		const inflowTotal = inflowParticulars.reduce((total, entry) => total + parseFloat(entry.amount), 0);
 		const outflowTotal = outflowParticulars.reduce((total, entry) => total + parseFloat(entry.amount), 0);
 		const netCashFlow = inflowTotal - outflowTotal;
-
-		return netCashFlow;
+		onChange({ target: { id: 'netCashFlow', value: netCashFlow } });
+		setNetCashFlow(netCashFlow.toString());
 	};
+
+	useEffect(() => {
+		calculateNetCashFlow();
+	}, [inflowParticulars, outflowParticulars]);
+
+	useEffect(() => {
+		if (form.cashInflow) {
+			setInflowParticulars(form.cashInflow);
+			console.log(inflowParticulars);
+			console.log(form.cashInflow);
+		}
+		if (form.cashOutflow) {
+			setOutflowParticulars(form.cashOutflow);
+		}
+		if (form.netCashFlow) {
+			setNetCashFlow(form.netCashFlow);
+		}
+	}, [form.cashInflow, form.cashOutflow, form.netCashFlow]);
 
 	return (
 		<div className='flex flex-col gap-4'>
@@ -92,23 +115,21 @@ export function CashFlow({ onChange }: CashFlowProps) {
 					<Table>
 						<TableHeader>
 							<TableRow>
-								<TableHead className=''>Particular</TableHead>
-								<TableHead className='text-right'>Amount</TableHead>
-								<TableHead className='text-right'>Del</TableHead>
+								<TableHead className='lg:w-[150px] w-[55px]'>Particular</TableHead>
+								<TableHead className='text-right p-0 lg:w-[90px] w-[55px]'>Amount</TableHead>
+								<TableHead className='text-right p-0 w-[30px]'>Del</TableHead>
 							</TableRow>
 						</TableHeader>
-						<TableBody>
+						<TableBody className='border-b'>
 							{inflowParticulars.map((particular, index) => (
 								<TableRow key={`inflow-${index}-${particular.particular}-${particular.amount}`}>
-									<TableCell className='font-medium py-0'>
+									<TableCell className='font-medium lg:w-[150px] w-[55px] py-0'>
 										<span className='flex lg:w-[150px] w-[55px] truncate'>{particular.particular}</span>
 									</TableCell>
-									<TableCell className=' py-0'>
-										<span className='flex lg:w-[90px] w-[55px] text-right truncate justify-end'>
-											₱&#160;{particular.amount}
-										</span>
+									<TableCell className='p-0 lg:w-[90px] w-[55px] m-0 text-end'>
+										<span className='p-0 m-0 lg:w-[90px] w-[55px] truncate'>₱&#160;{particular.amount}</span>
 									</TableCell>
-									<TableCell className='py-0'>
+									<TableCell className='p-0 m-0 justify-end flex text-end'>
 										<Button
 											onClick={() => removeInflowParticular(index)}
 											className='p-0 m-0 bg-transparent text-red-600 hover:text-red-400 text-xl hover:bg-transparent'
@@ -120,9 +141,9 @@ export function CashFlow({ onChange }: CashFlowProps) {
 							))}
 						</TableBody>
 					</Table>
-					<div className='flex w-full justify-end pr-20 pt-2 border-t'>
+					<div className='flex w-full justify-center'>
 						<p className='text-sm font-semibold'>
-							Total: ₱ {inflowParticulars.reduce((total, entry) => total + parseFloat(entry.amount), 0)}
+							Total: ₱ {inflowParticulars.reduce((total, entry) => total + parseFloat(entry.amount), 0) || 0}
 						</p>
 					</div>
 				</div>
@@ -148,23 +169,21 @@ export function CashFlow({ onChange }: CashFlowProps) {
 					<Table>
 						<TableHeader>
 							<TableRow>
-								<TableHead>Particular</TableHead>
-								<TableHead className='text-right'>Amount</TableHead>
-								<TableHead className='text-right'>Del</TableHead>
+								<TableHead className='lg:w-[150px] w-[55px]'>Particular</TableHead>
+								<TableHead className='text-right p-0 lg:w-[90px] w-[55px]'>Amount</TableHead>
+								<TableHead className='text-right p-0 w-[30px]'>Del</TableHead>
 							</TableRow>
 						</TableHeader>
-						<TableBody>
+						<TableBody className='border-b'>
 							{outflowParticulars.map((particular, index) => (
-								<TableRow key={`outflow-${index}-${particular.particular}-${particular.amount}`}>
-									<TableCell className='font-medium py-0'>
+								<TableRow key={`inflow-${index}-${particular.particular}-${particular.amount}`}>
+									<TableCell className='font-medium lg:w-[150px] w-[55px] py-0'>
 										<span className='flex lg:w-[150px] w-[55px] truncate'>{particular.particular}</span>
 									</TableCell>
-									<TableCell className=' py-0'>
-										<span className='flex lg:w-[90px] w-[55px] text-right truncate justify-end'>
-											₱&#160;{particular.amount}
-										</span>
+									<TableCell className='p-0 lg:w-[90px] w-[55px] m-0 text-end'>
+										<span className='p-0 m-0 lg:w-[90px] w-[55px] truncate'>₱&#160;{particular.amount}</span>
 									</TableCell>
-									<TableCell className='py-0'>
+									<TableCell className='p-0 m-0 justify-end flex text-end'>
 										<Button
 											onClick={() => removeOutflowParticular(index)}
 											className='p-0 m-0 bg-transparent text-red-600 hover:text-red-400 text-xl hover:bg-transparent'
@@ -176,15 +195,14 @@ export function CashFlow({ onChange }: CashFlowProps) {
 							))}
 						</TableBody>
 					</Table>
-					<div className='flex w-full justify-end pr-20 pt-2 border-t'>
+					<div className='flex w-full justify-center'>
 						<p className='text-sm font-semibold'>
-							Total: ₱ {outflowParticulars.reduce((total, entry) => total + parseFloat(entry.amount), 0)}
+							Total: ₱ {outflowParticulars.reduce((total, entry) => total + parseFloat(entry.amount), 0) || 0}
 						</p>
 					</div>
 				</div>
 			</div>
-
-			<div className='sm:text-xl text-base font-semibold text-dark'>Net Cash Flow: ₱ {calculateNetCashFlow()}</div>
+			<div className='sm:text-lg text-base font-semibold text-dark'>Net Cash Flow: ₱ {netCashFlow}</div>
 		</div>
 	);
 }

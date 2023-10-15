@@ -233,19 +233,22 @@ const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
 							<div className='mt-1 flex gap-2'>
 								<p className='font-semibold'>Nature of Activity:</p>
 								<div className='flex gap-1 items-center'>
-									<Checkbox checked={formContent.natureOfActivity.includes('scientia')} className='translate-y-1' />
+									<Checkbox checked={formContent.natureOfActivity?.includes('scientia')} className='translate-y-1' />
 									<label>Scientia</label>
 								</div>
 								<div className='flex gap-1 items-center'>
-									<Checkbox checked={formContent.natureOfActivity.includes('virtus')} className='translate-y-1' />
+									<Checkbox checked={formContent.natureOfActivity?.includes('virtus')} className='translate-y-1' />
 									<label>Virtus</label>
 								</div>
 								<div className='flex gap-1 items-center'>
-									<Checkbox checked={formContent.natureOfActivity.includes('devotio')} className='translate-y-1' />
+									<Checkbox checked={formContent.natureOfActivity?.includes('devotio')} className='translate-y-1' />
 									<label>Devotio</label>
 								</div>
 								<div className='flex gap-1 items-center'>
-									<Checkbox checked={formContent.natureOfActivity.includes('organization')} className='translate-y-1' />
+									<Checkbox
+										checked={formContent.natureOfActivity?.includes('organization')}
+										className='translate-y-1'
+									/>
 									<label>{'Organizational/Routinal'}</label>
 								</div>
 							</div>

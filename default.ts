@@ -52,7 +52,6 @@ export const defaultForm3: IFormThree = {
 	cashInflow: [{ particular: '', amount: '' }],
 	cashOutflow: [{ particular: '', amount: '' }],
 	netCashFlow: '',
-	involvement: '',
 	treasurer: '',
 	president: '',
 	endorsedBy: '',
