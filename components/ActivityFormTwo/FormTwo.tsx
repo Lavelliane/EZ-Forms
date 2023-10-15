@@ -1,4 +1,3 @@
-'use client';
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -27,6 +26,7 @@ const FormTwo = () => {
 	const [startTime, setStartTime] = useState('');
 	const [endTime, setEndTime] = useState('');
 	const [date, setDate] = useState<Date>();
+	const [loading, setLoading] = useState(true);
 
 	const { mutate: generateFormAgenda, isLoading } = useMutation({
 		mutationFn: getFormOneFields,
@@ -63,6 +63,25 @@ const FormTwo = () => {
 		setForm({ ...form, ['time']: startTime + ' - ' + endTime });
 	}, [startTime, endTime]);
 
+	// Load the object from local storage when the component mounts
+	useEffect(() => {
+		const savedForm = JSON.parse(localStorage.getItem('formTwo') || '{}');
+		if (savedForm) {
+			setForm(savedForm);
+			setIsCheckedOrganizer(savedForm.involvement === 'organizer');
+			setIsCheckedParticipant(savedForm.involvement === 'participant');
+			setStartTime(savedForm.time?.split(' - ')[0]);
+			setEndTime(savedForm.time?.split(' - ')[1]);
+		}
+		setLoading(false);
+	}, []);
+
+	useEffect(() => {
+		if (!loading && form) {
+			localStorage.setItem('formTwo', JSON.stringify(form));
+		}
+	}, [form]);
+
 	return (
 		<Card className='flex flex-grow flex-col bg-white hover:shadow-md transition-shadow w-fit h-fit z-10 py-4 sm:px-8 px-0'>
 			<CardHeader className='text-center'>
@@ -74,11 +93,23 @@ const FormTwo = () => {
 				<div className='flex sm:flex-row flex-col justify-center sm:gap-10 gap-4 items-center'>
 					<div className='grid w-full sm:max-w-sm items-center gap-1.5'>
 						<Label htmlFor='organizationName'>Organization Name</Label>
-						<Input type='text' id='organizationName' placeholder='Enter name of organization' onChange={onChange} />
+						<Input
+							type='text'
+							id='organizationName'
+							value={form.organizationName || ''}
+							placeholder='Enter name of organization'
+							onChange={onChange}
+						/>
 					</div>
 					<div className='grid w-full sm:max-w-sm items-center gap-1.5'>
 						<Label htmlFor='activityName'>Activity Name</Label>
-						<Input type='text' id='activityName' placeholder='Enter name of the activity' onChange={onChange} />
+						<Input
+							type='text'
+							id='activityName'
+							value={form.activityName || ''}
+							placeholder='Enter name of the activity'
+							onChange={onChange}
+						/>
 					</div>
 				</div>
 				<div className='flex sm:flex-row flex-col justify-center sm:gap-10 gap-4 items-center'>
@@ -113,7 +144,13 @@ const FormTwo = () => {
 				<div className='flex sm:flex-row flex-col justify-center gap-10 sm:items-end items-center'>
 					<div className='grid w-full sm:max-w-sm items-center gap-1.5'>
 						<Label htmlFor='venue'>Venue</Label>
-						<Input type='text' id='venue' placeholder='Enter name of venue' onChange={onChange} />
+						<Input
+							type='text'
+							id='venue'
+							value={form.venue || ''}
+							placeholder='Enter name of venue'
+							onChange={onChange}
+						/>
 					</div>
 					<div className='grid w-full sm:max-w-sm items-center gap-1.5'></div>
 				</div>
@@ -181,15 +218,15 @@ const FormTwo = () => {
 							value={form.agenda || ''}
 						/>
 						{!form.organizationName ? (
-							<p className=' text-red-500 text-xs'>Organization and activity names required.</p>
+							<p className=' text-red-500 text-xs'>CharmScript requires organization and activity names.</p>
 						) : (
 							''
 						)}
 						<Button
 							disabled={!form.organizationName || !form.activityName || isLoading}
 							type='submit'
-							onClick={async (e) => {
-								await generateFormAgenda({
+							onClick={(e) => {
+								generateFormAgenda({
 									eventName: form.activityName,
 									orgName: form.organizationName,
 									outputType: 'agenda',
@@ -206,40 +243,43 @@ const FormTwo = () => {
 				<div className='flex flex-col items-center justify-evenly w-full '>
 					<h4 className='font-semibold text-center'>Signatories</h4>
 					<div className='flex sm:flex-row flex-col w-full gap-4 mt-4'>
-						<div className='rounded-lg bg-purple-100 p-4 text-dark w-full hover:shadow-md focus-within:shadow-md transition-shadow'>
+						<div className='rounded-lg bg-gray-100 p-4 text-dark w-full hover:shadow-md focus-within:shadow-md transition-shadow'>
 							<label htmlFor='recommendedBy' className='text-sm font-medium leading-none'>
 								Recommended&#160;by:
 							</label>
 							<Input
 								id='recommendedBy'
+								value={form.recommendedBy || ''}
 								placeholder='Enter complete name'
-								className='rounded-none border-t-0 border-x-0 border-gray-400 bg-transparent text-dark text-sm font-medium leading-none focus-visible:bg-transparent'
+								className='rounded-none border-t-0 border-x-0 border-gray-400 bg-transparent text-dark text-sm font-medium leading-none focus-visible:bg-transparent text-center focus-within:placeholder-transparent'
 								onChange={onChange}
 							/>
 							<p className='text-xs font-medium leading-none justify-center mt-2 text-center'>
 								President of the Student Organization
 							</p>
 						</div>
-						<div className='rounded-lg bg-purple-100 p-4 text-dark w-full hover:shadow-md focus-within:shadow-md transition-shadow'>
+						<div className='rounded-lg bg-gray-100 p-4 text-dark w-full hover:shadow-md focus-within:shadow-md transition-shadow'>
 							<label htmlFor='endorsedBy' className='text-sm font-medium leading-none'>
 								Endorsed&#160;by:
 							</label>
 							<Input
 								id='endorsedBy'
+								value={form.endorsedBy || ''}
 								placeholder='Enter complete name'
-								className='rounded-none border-t-0 border-x-0 border-gray-400 bg-transparent text-dark text-sm font-medium leading-none focus-visible:bg-transparent'
+								className='rounded-none border-t-0 border-x-0 border-gray-400 bg-transparent text-dark text-sm font-medium leading-none focus-visible:bg-transparent text-center focus-within:placeholder-transparent'
 								onChange={onChange}
 							/>
 							<p className='text-xs font-medium leading-none justify-center mt-2 text-center'>Faculty-Adviser</p>
 						</div>
-						<div className='rounded-lg bg-purple-100 p-4 text-dark w-full hover:shadow-md focus-within:shadow-md transition-shadow'>
+						<div className='rounded-lg bg-gray-100 p-4 text-dark w-full hover:shadow-md focus-within:shadow-md transition-shadow'>
 							<label htmlFor='notedBy' className='text-sm font-medium leading-none'>
 								Noted&#160;by:
 							</label>
 							<Input
 								id='notedBy'
+								value={form.notedBy || ''}
 								placeholder='Enter complete name'
-								className='rounded-none border-t-0 border-x-0 border-gray-400 bg-transparent text-dark text-sm font-medium leading-none focus-visible:bg-transparent'
+								className='rounded-none border-t-0 border-x-0 border-gray-400 bg-transparent text-dark text-sm font-medium leading-none focus-visible:bg-transparent text-center focus-within:placeholder-transparent'
 								onChange={onChange}
 							/>
 							<p className='text-xs font-medium leading-none justify-center mt-2 text-center'>Dean/Department Chair</p>
@@ -259,7 +299,18 @@ const FormTwo = () => {
 					</p>
 				</div>
 				<div className='flex items-center justify-between w-full text-justify'>
-					<Button variant={'outline'} type='button'>
+					<Button
+						variant={'outline'}
+						type='button'
+						onClick={() => {
+							localStorage.removeItem('formTwo');
+							setForm(defaultForm2);
+							setIsCheckedOrganizer(false);
+							setIsCheckedParticipant(false);
+							setStartTime('');
+							setEndTime('');
+						}}
+					>
 						Reset
 					</Button>
 					<SheetToPDF formContent={form} />

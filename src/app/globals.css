@@ -5,7 +5,7 @@
 @layer base {
   :root {
     --purple-dark: rgba(85,37,132, 1);
-    --purple-light: rgba(147,0,255, 1);
+    --purple-light: rgba(147, 0, 255, 1);
     --gray-dark: rgba(51,51,51, 1);
     --gray-light: rgba(237,237,237, 1);
     --gray-lighter: rgba(237,237,237, .7);

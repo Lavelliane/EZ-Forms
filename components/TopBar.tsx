@@ -41,7 +41,7 @@ export default function TopBar() {
 					<NavigationMenuContent className='w-full'>
 						<ul className='flex flex-row p-6 w-[500px] items-center justify-center'>
 							<li className='flex flex-col w-full p-4 text-center justify-center items-center rounded-md bg-gradient-to-b from-purple-50 to-purple-100'>
-								<Image src={logo} alt='ez-forms logo' className='w-24 h-40' />
+								<Image src={logo} alt='ez-forms logo' width={120} height={40} />
 								<h2 className='font-bold text-xl'>EZ-FORMS</h2>
 								<p className='font-light text-xs'>Generate&#160;|&#160;Print&#160;|&#160;Submit</p>
 							</li>
@@ -92,13 +92,12 @@ export default function TopBar() {
 	);
 }
 
-const ListItem = React.forwardRef<React.ElementRef<'a'>, React.ComponentPropsWithoutRef<'a'>>(
+const ListItem = React.forwardRef<React.ElementRef<'div'>, React.ComponentPropsWithoutRef<'div'>>(
 	({ className, title, children, ...props }, ref) => {
 		return (
-			<li>
+			<div>
 				<NavigationMenuLink asChild>
-					<a
-						ref={ref}
+					<div
 						className={cn(
 							'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-purple-100 hover:text-accent-foreground focus:bg-purple-100 focus:text-accent-foreground',
 							className
@@ -107,9 +106,9 @@ const ListItem = React.forwardRef<React.ElementRef<'a'>, React.ComponentPropsWit
 					>
 						<div className='text-sm font-medium leading-none'>{title}</div>
 						<p className='line-clamp-2 text-sm leading-snug text-muted-foreground'>{children}</p>
-					</a>
+					</div>
 				</NavigationMenuLink>
-			</li>
+			</div>
 		);
 	}
 );
