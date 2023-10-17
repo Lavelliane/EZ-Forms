@@ -29,31 +29,48 @@ const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
 		setLoader(true);
 		const input = pdfRef.current;
 
-		// Ensure that the HTML2Canvas rendering is complete before generating the PDF
 		html2canvas(input as HTMLDivElement, { scale: 2 }).then((canvas) => {
 			const imgData = canvas.toDataURL('image/png');
-			const pdf = new jsPDF('p', 'mm', 'a4', true); // Use 'mm' units for positioning
+			const pdf = new jsPDF('p', 'mm', 'a4', true);
 
-			// Set the PDF width and height to match A4 dimensions (210mm x 297mm)
 			const pdfWidth = pdf.internal.pageSize.getWidth();
 			const pdfHeight = pdf.internal.pageSize.getHeight();
 
-			// Calculate the image dimensions and position
-			const imgWidth = pdfWidth; // Adjust for margins (10mm on each side)
-			const imgHeight = pdfHeight;
-			const imgY = 0; // 10mm top margin
+			// Adjust the margins to your preference
+			const leftMargin = 10;
+			const rightMargin = 10;
+			const topMargin = 10;
+			const bottomMargin = 10;
 
-			//ratio of image width based on height
-			const ratio = imgWidth / imgHeight + 0.1;
+			const maxImageWidth = pdfWidth - (leftMargin + rightMargin);
+			const maxImageHeight = pdfHeight - (topMargin + bottomMargin);
 
-			//margin to center image horizontally and vertically
-			const marginX = (pdfWidth - imgWidth * ratio) / 2;
+			const img = document.createElement('img');
 
-			// Add the image to the PDF with correct dimensions and position
-			pdf.addImage(imgData, 'PNG', marginX, imgY, imgWidth * ratio, imgHeight);
-			setLoader(false);
-			// Save the PDF with the specified file name
-			pdf.save('activity-form-1-activity-summary.pdf');
+			img.onload = function() {
+				const imgWidth = img.width;
+				const imgHeight = img.height;
+
+				// Calculate scaling factors for width and height
+				const widthScale = maxImageWidth / imgWidth;
+				const heightScale = maxImageHeight / imgHeight;
+
+				// Use the smaller scaling factor to ensure both dimensions fit
+				const scale = Math.min(widthScale, heightScale);
+
+				const newWidth = imgWidth * scale;
+				const newHeight = imgHeight * scale;
+
+				// Calculate positioning
+				const imgX = (pdfWidth - newWidth) / 2;
+				const imgY = topMargin;
+
+				pdf.addImage(img, 'PNG', imgX, imgY, newWidth, newHeight);
+				setLoader(false);
+				pdf.save('activity-form-1-activity-form.pdf');
+			};
+
+			img.src = imgData;
 		});
 	};
 
@@ -216,19 +233,22 @@ const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
 							<div className='mt-1 flex gap-2'>
 								<p className='font-semibold'>Nature of Activity:</p>
 								<div className='flex gap-1 items-center'>
-									<Checkbox checked={formContent.natureOfActivity.includes('scientia')} className='translate-y-1' />
+									<Checkbox checked={formContent.natureOfActivity?.includes('scientia')} className='translate-y-1' />
 									<label>Scientia</label>
 								</div>
 								<div className='flex gap-1 items-center'>
-									<Checkbox checked={formContent.natureOfActivity.includes('virtus')} className='translate-y-1' />
+									<Checkbox checked={formContent.natureOfActivity?.includes('virtus')} className='translate-y-1' />
 									<label>Virtus</label>
 								</div>
 								<div className='flex gap-1 items-center'>
-									<Checkbox checked={formContent.natureOfActivity.includes('devotio')} className='translate-y-1' />
+									<Checkbox checked={formContent.natureOfActivity?.includes('devotio')} className='translate-y-1' />
 									<label>Devotio</label>
 								</div>
 								<div className='flex gap-1 items-center'>
-									<Checkbox checked={formContent.natureOfActivity.includes('organization')} className='translate-y-1' />
+									<Checkbox
+										checked={formContent.natureOfActivity?.includes('organization')}
+										className='translate-y-1'
+									/>
 									<label>{'Organizational/Routinal'}</label>
 								</div>
 							</div>

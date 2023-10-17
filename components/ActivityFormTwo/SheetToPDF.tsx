@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import {
 	Sheet,
 	SheetHeader,
@@ -35,7 +35,15 @@ const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
 
 			const pdfWidth = pdf.internal.pageSize.getWidth();
 			const pdfHeight = pdf.internal.pageSize.getHeight();
-			const maxImageWidth = pdfWidth - 15; // Adjust for margins (10mm on each side)
+
+			// Adjust the margins to your preference
+			const leftMargin = 10;
+			const rightMargin = 10;
+			const topMargin = 10;
+			const bottomMargin = 10;
+
+			const maxImageWidth = pdfWidth - (leftMargin + rightMargin);
+			const maxImageHeight = pdfHeight - (topMargin + bottomMargin);
 
 			const img = document.createElement('img');
 
@@ -43,25 +51,23 @@ const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
 				const imgWidth = img.width;
 				const imgHeight = img.height;
 
-				// Calculate the aspect ratio and adjust dimensions
-				const aspectRatio = imgWidth / imgHeight;
-				let newWidth, newHeight;
+				// Calculate scaling factors for width and height
+				const widthScale = maxImageWidth / imgWidth;
+				const heightScale = maxImageHeight / imgHeight;
 
-				if (aspectRatio > 1) {
-					newWidth = maxImageWidth;
-					newHeight = maxImageWidth / aspectRatio;
-				} else {
-					newWidth = maxImageWidth * aspectRatio;
-					newHeight = maxImageWidth;
-				}
+				// Use the smaller scaling factor to ensure both dimensions fit
+				const scale = Math.min(widthScale, heightScale);
 
-				const topMargin = 2; // Adjust as needed
+				const newWidth = imgWidth * scale;
+				const newHeight = imgHeight * scale;
+
+				// Calculate positioning
+				const imgX = (pdfWidth - newWidth) / 2;
 				const imgY = topMargin;
-				const marginX = (pdfWidth - newWidth) / 2;
 
-				pdf.addImage(img, 'PNG', marginX, imgY, newWidth, newHeight);
+				pdf.addImage(img, 'PNG', imgX, imgY, newWidth, newHeight);
 				setLoader(false);
-				pdf.save('activity-form-2-agenda.pdf');
+				pdf.save('activity-form-2-assembly.pdf');
 			};
 
 			img.src = imgData;

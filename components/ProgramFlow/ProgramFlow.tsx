@@ -6,8 +6,8 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
-import { DataTable } from './EditableTable'
 import { CustomTimePicker } from '@/components/ui/time-picker';
+import { DataTable } from './EditableTable';
 import PopoverNature from '../../components/PopoverNature';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { CalendarIcon } from 'lucide-react';
@@ -21,11 +21,10 @@ import { useMutation } from '@tanstack/react-query';
 import getFormOneFields from '@/mutations/getFormOneFields';
 import ComboboxPosition from './ComboboxPosition';
 import SliderProficiencyLevel, { ProficiencyLevel, proficiencyLevels } from './SliderProficiencyLevel';
-import TabActivitySettings from './TabActivitySettings'
+import TabActivitySettings from './TabActivitySettings';
 import SheetToPDF from './SheetToPDF';
 import getProgramFlowFields from '@/mutations/getProgramFlowFields';
-import { Activity, columns } from "./TableColumns"
-import { v4 as uuidv4 } from 'uuid';
+import { FlowTable } from './FlowTable';
 
 const ProgramFlow = () => {
 	const [form, setForm] = useState<IProgramFlow>(defaultProgramFlow);
@@ -36,10 +35,8 @@ const ProgramFlow = () => {
 
 	const [isCheckedPosition, setIsCheckedPosition] = useState(false);
 	const [presentationMode, setPresentationMode] = useState<any>('');
-	const [selectedPosition, setSelectedPosition] = useState<string>("");
+	const [selectedPosition, setSelectedPosition] = useState<string>('');
 	const [selectedProficiencyLevel, setSelectedProficiencyLevel] = useState<number>(3);
-	const [tableData, setTableData] = useState<Activity[]>([]);
-	const [selectedMode, setSelectedMode] = useState<string>("face-to-face");
 
 	// ########### Input Box Form Updates
 	const onChange = (e: any) => {
@@ -50,34 +47,9 @@ const ProgramFlow = () => {
 	const { mutate: generateProgramFlow, isLoading } = useMutation({
 		mutationFn: getProgramFlowFields,
 		onSuccess: (data) => {
-			setTableData(data);
+			setForm({ ...form, ['programFlow']: data });
 		},
 	});
-
-	const setTableDataId = () => {
-	  	tableData.forEach((data) => {
-		  	if (!data.id) {
-				data.id = uuidv4();
-		  	}
-		});
-		setTableData(tableData);
-	};
-
-	const addEmptyRow = () => {
-		const newRow: Activity = {
-			activityName: 'Enter activity name here...',
-			timeSlot: '00:00 - 00:00',
-			id: uuidv4()
-		};
-		setTableData([...tableData, newRow]);
-	};
-
-	useEffect(() => {
-		setTableDataId();
-		console.log(tableData)
-	  }, [tableData]);
-
-
 
 	// ########### Proficiency Level
 	const handleProficiencyChange = (level: number) => {
@@ -85,34 +57,30 @@ const ProgramFlow = () => {
 		setSelectedProficiencyLevel(level);
 		// Update the form state with the selected proficiency level
 		setForm({ ...form, proficiencyLevel: proficiencyLevels[level - 1].label });
-	  };
+	};
 
-
-	  
 	// ########### Organizer Position
 	const onCheckedPosition = (e: any) => {
 		if (e.target.id === 'otherPosition') {
-		  setIsCheckedPosition(!isCheckedPosition);
+			setIsCheckedPosition(!isCheckedPosition);
 		}
 	};
-	  
-	useEffect(() => {
-		if (isCheckedPosition === true) {
-			setForm({ ...form, ['organizerPosition']: form.organizerPosition });
-		} else if (isCheckedPosition == false) {
-			setForm({ ...form, ['organizerPosition']: selectedPosition });
-		}
-	  }, [isCheckedPosition]);
 
 	useEffect(() => {
-		if (isCheckedPosition === true) {
+		if (isCheckedPosition) {
 			setForm({ ...form, ['organizerPosition']: form.organizerPosition });
-		} else if (isCheckedPosition == false) {
+		} else if (!isCheckedPosition) {
+			setForm({ ...form, ['organizerPosition']: selectedPosition });
+		}
+	}, [isCheckedPosition]);
+
+	useEffect(() => {
+		if (isCheckedPosition) {
+			setForm({ ...form, ['organizerPosition']: form.organizerPosition });
+		} else if (!isCheckedPosition) {
 			setForm({ ...form, ['organizerPosition']: selectedPosition });
 		}
 	}, [selectedPosition]);
-
-	  
 
 	// ########### Date & Time
 	useEffect(() => {
@@ -133,9 +101,7 @@ const ProgramFlow = () => {
 	useEffect(() => {
 		setForm({ ...form, ['time']: startTime + ' - ' + endTime });
 	}, [startTime, endTime]);
-
-
-
+	console.log(form);
 	return (
 		<Card className='flex flex-grow flex-col bg-white hover:shadow-md transition-shadow w-fit h-fit z-10 py-4 sm:px-8 px-0'>
 			<CardHeader className='text-center'>
@@ -143,9 +109,7 @@ const ProgramFlow = () => {
 				<CardDescription className='text-gray-600'>(Program Flow for General Activity Form 1)</CardDescription>
 			</CardHeader>
 
-
 			<CardContent className='flex flex-col gap-4 relative justify-center'>
-
 				{/* ---------- Top Section ---------- */}
 				<div className='flex flex-col w-full items-center gap-2'>
 					<div className='flex text-center items-center justify-center gap-2'>
@@ -162,7 +126,13 @@ const ProgramFlow = () => {
 					<Separator className='my-2 max-w-lg' />
 					<div className='flex flex-col w-full text-center items-center justify-center gap-1.5'>
 						<h4 className='font-semibold text-center text-sm'>Name&#160;of&#160;Organization</h4>
-						<Input type='text' id='organizationName' placeholder='Enter name of organization' onChange={onChange} className='text-center sm:w-full md:w-1/2'/>
+						<Input
+							type='text'
+							id='organizationName'
+							placeholder='Enter name of organization'
+							onChange={onChange}
+							className='text-center sm:w-full md:w-1/2'
+						/>
 					</div>
 				</div>
 				<Separator className='my-2' />
@@ -171,8 +141,8 @@ const ProgramFlow = () => {
 				<div className='flex sm:flex-row flex-col justify-center sm:gap-6 gap-2'>
 					<div className={`flex flex-col pb-5 pt-5 gap-4 w-full h-fit rounded-lg`}>
 						<div className='grid w-full sm:max-w-sm items-center gap-1.5'>
-								<Label htmlFor='activityName'>Name of Activity</Label>
-								<Input type='text' id='activityName' placeholder='Enter name of activity' onChange={onChange} />
+							<Label htmlFor='eventName'>Name of Activity</Label>
+							<Input type='text' id='eventName' placeholder='Enter name of activity' onChange={onChange} />
 						</div>
 						<div className='grid w-full sm:max-w-sm items-center gap-1.5'>
 							<Label htmlFor='date'>Date of Activity</Label>
@@ -192,8 +162,8 @@ const ProgramFlow = () => {
 							</Popover>
 						</div>
 						<div className='grid w-full sm:max-w-sm items-center gap-1.5'>
-								<Label htmlFor='venue'>Venue of Activity</Label>
-								<Input type='text' id='venue' placeholder='Enter venue of activity' onChange={onChange} />
+							<Label htmlFor='venue'>Venue of Activity</Label>
+							<Input type='text' id='venue' placeholder='Enter venue of activity' onChange={onChange} />
 						</div>
 					</div>
 					<div className={`flex flex-col pb-5 pt-5 gap-4 w-full h-fit rounded-lg`}>
@@ -202,18 +172,23 @@ const ProgramFlow = () => {
 							<Input type='text' id='headOrganizer' placeholder='Enter name of head organizer' onChange={onChange} />
 						</div>
 						<div className='grid w-full sm:max-w-sm items-center gap-1.5'>
-							<Label htmlFor='headOrganizer'>Position</Label>		
+							<Label htmlFor='headOrganizer'>Position</Label>
 							<div className='flex w-full items-center justify-between gap-4'>
 								<div className={`flex flex-col w-full transition-transform ${isCheckedPosition ? 'hidden' : ''}`}>
 									<ComboboxPosition
 										selectedPosition={selectedPosition}
 										onPositionChange={(position) => {
-											setSelectedPosition(position)
+											setSelectedPosition(position);
 										}}
 									/>
 								</div>
 								<div className={`flex w-full transition-transform ${isCheckedPosition ? '' : 'hidden'}`}>
-									<Input type='text' id='organizerPosition' placeholder='Enter position of head organizer' onChange={onChange} />
+									<Input
+										type='text'
+										id='organizerPosition'
+										placeholder='Enter position of head organizer'
+										onChange={onChange}
+									/>
 								</div>
 								<div className='flex gap-2 items-end'>
 									<Checkbox
@@ -224,11 +199,14 @@ const ProgramFlow = () => {
 										}}
 									/>
 									<div className='grid gap-1.5 leading-none'>
-										<label htmlFor='otherPosition' className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>
+										<label
+											htmlFor='otherPosition'
+											className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+										>
 											Other
 										</label>
 									</div>
-								</div>	
+								</div>
 							</div>
 						</div>
 						<div className='flex flex-1 w-full sm:max-w-sm items-center gap-4'>
@@ -256,11 +234,11 @@ const ProgramFlow = () => {
 									description='The intended participants’ estimated level of skill or knowledge on the activity. This metric will be used to fine-tune the program flow generation.'
 								/>
 							</span>
-							<SliderProficiencyLevel 
-								proficiencyLevels={proficiencyLevels} 
-								onProficiencyChange={handleProficiencyChange} 
+							<SliderProficiencyLevel
+								proficiencyLevels={proficiencyLevels}
+								onProficiencyChange={handleProficiencyChange}
 							/>
-						</div>						
+						</div>
 					</div>
 					<div className={`flex flex-col pb-5 pt-5 gap-4 w-full h-fit rounded-lg`}>
 						<div className='flex flex-col w-full gap-2 items-center justify-center'>
@@ -271,49 +249,45 @@ const ProgramFlow = () => {
 									description='Select specific components you would like to add in certain parts of your activity, or leave it all off and let magic do its thing.'
 								/>
 							</span>
-							<TabActivitySettings
-								selectedTab={selectedMode}
-								setSelectedTab={setSelectedMode}
-							/>
-							<div className='flex w-full justify-self-start'>
-								{!form.activityName || !form.time ? (
-									<p className=' text-red-500 text-xs'>Activity name, start and end times required.</p>
-								) : (
-									''
-								)}
+							<TabActivitySettings onChange={onChange} />
+
+							<div className='w-full flex flex-col gap-2 items-center -translate-x-[78px]'>
+								<div className='flex'>
+									{!form.eventName || !form.time ? (
+										<p className=' text-red-500 text-xs'>Activity name, start and end times required.</p>
+									) : (
+										''
+									)}
+								</div>
+								<div className='-translate-x-[70px]'>
+									<Button
+										disabled={!form.eventName || !form.modeOfPresentation || !form.time || isLoading}
+										type='submit'
+										onClick={async (e) => {
+											setPresentationMode('faceToFace');
+											await generateProgramFlow({
+												eventName: form.eventName,
+												type: form.modeOfPresentation,
+												startTime: form.time.split(' - ')[0],
+												endTime: form.time.split(' - ')[1],
+											});
+										}}
+										className='border border-purpleLight bg-transparent p-2 text-purpleLight hover:bg-purpleLight hover:text-white transition-color'
+									>
+										<span className='mr-1'>{isLoading ? 'Loading..' : 'Prophesize'}</span>
+										<IoSparklesOutline />
+									</Button>
+								</div>
 							</div>
-							<div className='flex w-full justify-self-start'>
-								<Button
-									type='submit'
-									onClick={async (e) => {
-										setPresentationMode('faceToFace');
-										await generateProgramFlow({
-											eventName: form.activityName,
-											type: selectedMode,
-											startTime: startTime,
-											endTime: endTime,
-										});
-									}}
-									className='border border-purpleLight bg-transparent p-2 text-purpleLight  hover:bg-purpleLight hover:text-white transition-color'
-								>
-									<span className='mr-1'>{isLoading ? 'Loading..' : 'Prophesize'}</span>
-									<IoSparklesOutline />
-								</Button>
-							</div>
-						</div>	
+						</div>
 					</div>
 				</div>
 				<Separator className='my-2' />
 
 				{/* ---------- Table Section ---------- */}
-				<div className='flex sm:flex-row flex-col justify-center sm:gap-6 gap-2'>
-					<div className="flex items-center justify-center w-full">
-						<DataTable 
-							columns={columns} 
-							data={tableData} 
-							addEmptyRow={addEmptyRow} 
-						/>
-					</div>
+				<div className='flex flex-col justify-center sm:gap-6 gap-2'>
+					<p>Program Flow</p>
+					<FlowTable onChange={onChange} form={form} />
 				</div>
 				<Separator className='my-2' />
 				<div className='flex flex-col items-center justify-evenly w-full my-4 text-justify'>
@@ -329,11 +303,11 @@ const ProgramFlow = () => {
 					<Button variant={'outline'} type='button'>
 						Reset
 					</Button>
-					<SheetToPDF formContent={form} tableData={tableData} />
+					<SheetToPDF formContent={form} />
 				</div>
 			</CardContent>
 		</Card>
 	);
 };
 
-export default ProgramFlow
+export default ProgramFlow;

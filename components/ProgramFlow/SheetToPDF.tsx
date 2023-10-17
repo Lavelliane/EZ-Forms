@@ -16,15 +16,12 @@ import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import Image from 'next/image';
 import SchoolLogo from '../../public/assets/University_of_San_Carlos_logo.svg';
-import { Activity } from "./TableColumns"
-
 
 type SheetToPDFProps = {
 	formContent: IProgramFlow;
-	tableData: Activity[];
 };
 
-const SheetToPDF = ({ formContent, tableData }: SheetToPDFProps) => {
+const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
 	const pdfRef = useRef<HTMLDivElement>(null);
 	const [loader, setLoader] = React.useState(false);
 
@@ -32,31 +29,48 @@ const SheetToPDF = ({ formContent, tableData }: SheetToPDFProps) => {
 		setLoader(true);
 		const input = pdfRef.current;
 
-		// Ensure that the HTML2Canvas rendering is complete before generating the PDF
-		html2canvas(input as HTMLDivElement).then((canvas) => {
+		html2canvas(input as HTMLDivElement, { scale: 2 }).then((canvas) => {
 			const imgData = canvas.toDataURL('image/png');
-			const pdf = new jsPDF('p', 'mm', 'a4'); // Use 'mm' units for positioning
+			const pdf = new jsPDF('p', 'mm', 'a4', true);
 
-			// Set the PDF width and height to match A4 dimensions (210mm x 297mm)
 			const pdfWidth = pdf.internal.pageSize.getWidth();
 			const pdfHeight = pdf.internal.pageSize.getHeight();
 
-			// Calculate the image dimensions and position
-			const imgWidth = pdfWidth; // Adjust for margins (10mm on each side)
-			const imgHeight = pdfHeight;
-			const imgY = 0; // 10mm top margin
+			// Adjust the margins to your preference
+			const leftMargin = 10;
+			const rightMargin = 10;
+			const topMargin = 10;
+			const bottomMargin = 10;
 
-			//ratio of image width based on height
-			const ratio = imgWidth / imgHeight + 0.1;
+			const maxImageWidth = pdfWidth - (leftMargin + rightMargin);
+			const maxImageHeight = pdfHeight - (topMargin + bottomMargin);
 
-			//margin to center image horizontally and vertically
-			const marginX = (pdfWidth - imgWidth * ratio) / 2;
+			const img = document.createElement('img');
 
-			// Add the image to the PDF with correct dimensions and position
-			pdf.addImage(imgData, 'PNG', marginX, imgY, imgWidth * ratio, imgHeight);
-			setLoader(false);
-			// Save the PDF with the specified file name
-			pdf.save('activity-form-1.pdf');
+			img.onload = function() {
+				const imgWidth = img.width;
+				const imgHeight = img.height;
+
+				// Calculate scaling factors for width and height
+				const widthScale = maxImageWidth / imgWidth;
+				const heightScale = maxImageHeight / imgHeight;
+
+				// Use the smaller scaling factor to ensure both dimensions fit
+				const scale = Math.min(widthScale, heightScale);
+
+				const newWidth = imgWidth * scale;
+				const newHeight = imgHeight * scale;
+
+				// Calculate positioning
+				const imgX = (pdfWidth - newWidth) / 2;
+				const imgY = topMargin;
+
+				pdf.addImage(img, 'PNG', imgX, imgY, newWidth, newHeight);
+				setLoader(false);
+				pdf.save('activity-program-flow.pdf');
+			};
+
+			img.src = imgData;
 		});
 	};
 
@@ -80,44 +94,39 @@ const SheetToPDF = ({ formContent, tableData }: SheetToPDFProps) => {
 						</div>
 						<div className='mt-2 flex flex-col w-full justify-between'>
 							<p className='flex w-full font-semibold'>
-								Name of Activity:{' '}
-								<span className='ml-1 font-normal'>{formContent.activityName}</span>
+								Name of Activity: <span className='ml-1 font-normal'>{formContent.eventName}</span>
 							</p>
 							<p className='flex w-full font-semibold'>
-								Date of Activity:{' '}
-								<span className='ml-1 font-normal'>{formContent.date}</span>
+								Date of Activity: <span className='ml-1 font-normal'>{formContent.date}</span>
 							</p>
 							<p className='flex w-full font-semibold'>
-								Venue of Activity:{' '}
-								<span className='ml-1 font-normal'>{formContent.venue}</span>
+								Venue of Activity: <span className='ml-1 font-normal'>{formContent.venue}</span>
 							</p>
 						</div>
 						<div className='mt-2 flex flex-col w-full justify-between'>
 							<p className='flex w-full font-semibold'>
-								Name of Head Organizer:{' '}
-								<span className='ml-1 font-normal'>{formContent.headOrganizer}</span>
+								Name of Head Organizer: <span className='ml-1 font-normal'>{formContent.headOrganizer}</span>
 							</p>
 							<p className='flex w-full font-semibold'>
-								Position:{' '}
-								<span className='ml-1 font-normal'>{formContent.organizerPosition}</span>
+								Position: <span className='ml-1 font-normal'>{formContent.organizerPosition}</span>
 							</p>
 						</div>
 						<div className='flex w-full'>
 							<table className='mt-2 w-full border border-collapse'>
-							<thead>
-								<tr>
-								<th className='border border-collapse px-2 py-1'>Time Slot</th>
-								<th className='border border-collapse px-2 py-1'>Activity Name</th>
-								</tr>
-							</thead>
-							<tbody>
-								{tableData.map((activity) => (
-								<tr key={activity.id}>
-									<td className='border border-collapse px-2 py-1'>{activity.timeSlot}</td>
-									<td className='border border-collapse px-2 py-1'>{activity.activityName}</td>
-								</tr>
-								))}
-							</tbody>
+								<thead>
+									<tr>
+										<th className='border border-collapse px-2 py-1'>Activity Name</th>
+										<th className='border border-collapse px-2 py-1'>Time Slot</th>
+									</tr>
+								</thead>
+								<tbody>
+									{formContent.programFlow.map((activity) => (
+										<tr key={`${activity.activityName}-${activity.timeSlot}`}>
+											<td className='border border-collapse px-2 py-1'>{activity.activityName}</td>
+											<td className='border border-collapse px-2 py-1'>{activity.timeSlot}</td>
+										</tr>
+									))}
+								</tbody>
 							</table>
 						</div>
 					</div>

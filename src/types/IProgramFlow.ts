@@ -1,26 +1,28 @@
 //program-flow types
 
-export default interface IProgramFlow {
-    organizationName: string;
+export interface IProgramFlow {
+	organizationName: string;
 	academicYear: string;
-
-	activityName: string;
+	eventName: string;
 	date: string;
 	time: string;
 	venue: string;
-	campus: string;
-
 	headOrganizer: string;
 	organizerPosition: string;
-	
-	proficiencyLevel: string
-	modeOfPresentation: string
-	demos: Boolean;
-	handsOn: Boolean;
-	qaSession: Boolean;
-	attendance: Boolean;
-	games: Boolean;
-	quizzes: Boolean;
-	guestSpeakers: Boolean
-	groupActivities: Boolean
+	proficiencyLevel: string;
+	modeOfPresentation: string;
+	programFlow: [IProgramFlowItem];
+	demos: boolean;
+	handsOn: boolean;
+	qaSession: boolean;
+	attendance: boolean;
+	games: boolean;
+	quizzes: boolean;
+	guestSpeakers: boolean;
+	groupActivities: boolean;
+}
+
+export interface IProgramFlowItem {
+	activityName: string;
+	timeSlot: string;
 }

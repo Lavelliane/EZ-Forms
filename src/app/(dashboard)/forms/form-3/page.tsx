@@ -1,8 +1,8 @@
 'use client';
 
-import Header from '../../../../../components/ActivityFormTwo/Header';
+import Header from '../../../../../components/ActivityFormThree/Header';
 
-function FormTwoPage() {
+function FormThreePage() {
 	return (
 		<div className='flex justify-center items-center '>
 			<div className='flex justify-start items-start w-full'>
@@ -11,4 +11,4 @@ function FormTwoPage() {
 		</div>
 	);
 }
-export default FormTwoPage;
+export default FormThreePage;

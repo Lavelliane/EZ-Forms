@@ -48,7 +48,7 @@ export function SliderProficiencyLevel({
   useEffect(() => {
     // Update the parent component's state with the selected proficiency level
     onProficiencyChange(selectedLevelInternal);
-  }, [selectedLevelInternal, onProficiencyChange]);
+  }, [selectedLevelInternal]);
 
   const handleSliderChange = (value: number[]) => {
     setSelectedLevelInternal(value[0]);
@@ -63,6 +63,7 @@ export function SliderProficiencyLevel({
           step={1}
           value={[selectedLevelInternal]}
           onValueChange={handleSliderChange}
+          className="cursor-pointer"
         />
       </div>
       <div className="flex flex-col w-full items-center justify-center">

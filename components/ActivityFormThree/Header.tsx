@@ -1,8 +1,6 @@
-import React, { Suspense } from 'react';
 import CardSchool from '../CardSchool';
 import CardActivitySection from '../CardActivitySection';
 import FormThree from './FormThree';
-import Loading from '../Loading';
 
 export default function Header() {
 	return (

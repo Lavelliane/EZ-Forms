@@ -1,8 +1,7 @@
 import FormOneRequest from "./FormOneRequest"
-import IFormOne from './IFormOne';
-import IFormTwo from "./IFormTwo";
-import ProgramFlowRequest from "./ProgramFlowRequest"
-import IProgramFlow from './IProgramFlow'
+import {IFormOne, IFormTwo, IFormThree} from './IForms';
+import ProgramFlowRequest from "./ProgramFlowRequest";
+import {IProgramFlow} from './IProgramFlow';
 
-export type { FormOneRequest, IFormOne, IFormTwo, ProgramFlowRequest, IProgramFlow}
+export type { FormOneRequest, IFormOne, IFormTwo, IFormThree, ProgramFlowRequest, IProgramFlow}
 
