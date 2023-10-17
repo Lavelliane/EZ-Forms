@@ -174,7 +174,9 @@ const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
 								</div>
 								<p className='flex mt-2'>Budget Schedule:</p>
 								<div className='flex flex-col w-[340px] ml-16 items-start justify-center gap-2'>
-									<p className='font-semibold'>CASH INFLOW (Collection)</p>
+									<p className='font-semibold'>
+										CASH INFLOW (Collection) <span className='font-normal italic'>Please refer to the next page</span>
+									</p>
 									<div className='flex w-full gap-4'>
 										<div className='flex flex-col gap-0 w-full items-center'>
 											<div className='flex flex-col gap-4 w-full items-center mb-1'>
@@ -198,7 +200,9 @@ const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
 								<Separator className='bg-dark mt-[1px]' />
 								<p className='flex mt-2'>Less:</p>
 								<div className='flex flex-col w-[340px] ml-16 items-start justify-center gap-2'>
-									<p className='font-semibold'>CASH OUTFLOW (Expenses)</p>
+									<p className='font-semibold'>
+										CASH OUTFLOW (Expenses) <span className='font-normal italic'>Please refer to the next page</span>
+									</p>
 									<div className='flex w-full gap-4'>
 										<div className='flex flex-col gap-0 w-full items-center'>
 											<div className='flex flex-col gap-4 w-full items-center mb-1'>
