@@ -85,6 +85,14 @@ const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
 			>
 				<div ref={pdfRef} className='bg-white p-5'>
 					<div className='w-[660px] h-fit bg-white relative'>
+						<div className='flex flex-col items-center'>
+							<Image src={SchoolLogo} alt='USC Logo' className=' object-fill w-16 h-16' />
+							<p className='text-center text-[9px]'>
+								University of San Carlos
+								<br />
+								Cebu City
+							</p>
+						</div>
 						<p className='text-center text-[10px] mt-1'>
 							<span className='font-bold'>PROGRAM FLOW</span> <br />
 							<span className='ml-1'>{formContent.organizationName}</span>
