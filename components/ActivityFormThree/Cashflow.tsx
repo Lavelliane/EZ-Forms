@@ -56,7 +56,7 @@ export function CashFlow({ onChange, form }: CashFlowProps) {
 		setInflowParticulars(updatedParticulars);
 		onChange({ target: { id: 'cashInflow', value: updatedParticulars } });
 	};
-	console.log(form);
+
 	const removeOutflowParticular = (index: number) => {
 		const updatedParticulars = [...outflowParticulars];
 		updatedParticulars.splice(index, 1);
@@ -118,7 +118,7 @@ export function CashFlow({ onChange, form }: CashFlowProps) {
 						</TableHeader>
 						<TableBody className='border-b'>
 							{inflowParticulars.map((particular, index) => (
-								<TableRow key={`inflow-${index}-${particular.particular}-${particular.amount}`}>
+								<TableRow key={`${particular.particular}-${particular.amount}`}>
 									<TableCell className='font-medium lg:w-[150px] w-[55px] py-0'>
 										<span className='flex lg:w-[150px] w-[55px] truncate'>{particular.particular}</span>
 									</TableCell>

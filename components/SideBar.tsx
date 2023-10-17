@@ -94,7 +94,7 @@ export default function SideBar() {
 				<Tooltip>
 					<TooltipTrigger asChild>
 						<Link
-							href='program-flow'
+							href='/program-flow'
 							className={`hover:bg-purpleDark p-3 items-center justify-center text-xl rounded-xl transition-colors ${
 								pathname.includes('program-flow') ? 'bg-grayDark' : ''
 							}`}
@@ -109,7 +109,7 @@ export default function SideBar() {
 				<Tooltip>
 					<TooltipTrigger asChild>
 						<Link
-							href='participants'
+							href='/participants'
 							className={`hover:bg-purpleDark p-3 items-center justify-center text-xl rounded-xl transition-colors ${
 								pathname.includes('participants') ? 'bg-grayDark' : ''
 							}`}

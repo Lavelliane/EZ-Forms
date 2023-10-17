@@ -1,5 +1,5 @@
 //form-1 default
-import { IFormOne, IFormTwo, IFormThree } from '@/types';
+import { IFormOne, IFormTwo, IFormThree, IProgramFlow } from '@/types';
 
 export const defaultForm1: IFormOne = {
 	academicYear: '',
@@ -38,6 +38,28 @@ export const defaultForm2: IFormTwo = {
 	recommendedBy: '',
 	endorsedBy: '',
 	notedBy: '',
+};
+
+export const defaultProgramFlow: IProgramFlow = {
+	organizationName: '',
+	academicYear: '',
+	eventName: '',
+	headOrganizer: '',
+	organizerPosition: '',
+	proficiencyLevel: 'Intermediate',
+	modeOfPresentation: 'face-to-face',
+	programFlow: [{ activityName: '', timeSlot: '' }],
+	demos: false,
+	handsOn: false,
+	qaSession: false,
+	attendance: false,
+	games: false,
+	quizzes: false,
+	guestSpeakers: false,
+	groupActivities: false,
+	date: '00:00AM - 12:00PM',
+	time: '',
+	venue: '',
 };
 
 export const defaultForm3: IFormThree = {
