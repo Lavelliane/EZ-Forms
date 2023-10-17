@@ -10,7 +10,7 @@ import {
 	SheetClose,
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import { IFormOne, IProgramFlow } from '@/types';
+import { IProgramFlow } from '@/types';
 import { Checkbox } from '@/components/ui/checkbox';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';

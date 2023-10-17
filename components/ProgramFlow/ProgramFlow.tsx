@@ -7,7 +7,6 @@ import { Separator } from '@/components/ui/separator';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { CustomTimePicker } from '@/components/ui/time-picker';
-import { DataTable } from './EditableTable';
 import PopoverNature from '../../components/PopoverNature';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { CalendarIcon } from 'lucide-react';
