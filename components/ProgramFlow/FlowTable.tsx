@@ -14,71 +14,77 @@ interface Activity {
 	originalTimeSlot: string;
 }
 
-interface CashFlowProps {
+interface FlowTableProps {
 	onChange: (e: any) => void;
 	form: IProgramFlow;
 }
 
-export function FlowTable({ onChange, form }: CashFlowProps) {
+export function FlowTable({ onChange, form }: FlowTableProps) {
 	const [activity, setActivity] = useState<Activity[]>([]);
 	const [newActivity, setNewActivity] = useState('');
 	const [newTimeSlot, setNewTimeSlot] = useState('');
-
+  
+	useEffect(() => {
+	  if (form.programFlow) {
+		const activities = form.programFlow
+		  .filter((item: { activityName: string; timeSlot: string }) => item.activityName && item.timeSlot)
+		  .map((item: { activityName: string; timeSlot: string }) => ({
+			activityName: item.activityName,
+			timeSlot: item.timeSlot,
+			isEditing: false,
+			originalActivity: item.activityName,
+			originalTimeSlot: item.timeSlot,
+		  }));
+		setActivity(activities);
+	  }
+	}, [form.programFlow]);
+  
 	const addActivity = () => {
-		if (newActivity && newTimeSlot) {
-			const newEntry: Activity = {
-				activityName: newActivity,
-				timeSlot: newTimeSlot,
-				isEditing: false,
-				originalActivity: newActivity,
-				originalTimeSlot: newTimeSlot,
-			};
-			setActivity([...activity, newEntry]);
-			onChange({ target: { id: 'programFlow', value: [...activity, newEntry] } });
-			setNewActivity('');
-			setNewTimeSlot('');
-		}
-	};
-
-	const removeActivity = (index: number) => {
-		const updatedActivity = [...activity];
-		updatedActivity.splice(index, 1);
-		setActivity(updatedActivity);
-	};
-
-	const toggleEdit = (index: number) => {
-		const updatedActivity = [...activity];
-		updatedActivity[index].isEditing = !updatedActivity[index].isEditing;
-		setActivity(updatedActivity);
-	};
-
-	const handleEdit = (index: number) => {
-		const updatedActivity = [...activity];
-		const newEditedActivity = newActivity || updatedActivity[index].originalActivity;
-		const newEditedTimeSlot = newTimeSlot || updatedActivity[index].originalTimeSlot;
-		updatedActivity[index].activityName = newEditedActivity;
-		updatedActivity[index].timeSlot = newEditedTimeSlot;
-		updatedActivity[index].isEditing = false;
-		updatedActivity[index].originalActivity = newEditedActivity;
-		updatedActivity[index].originalTimeSlot = newEditedTimeSlot;
-		setActivity(updatedActivity);
+	  if (newActivity && newTimeSlot) {
+		const newEntry: Activity = {
+		  activityName: newActivity,
+		  timeSlot: newTimeSlot,
+		  isEditing: false,
+		  originalActivity: newActivity,
+		  originalTimeSlot: newTimeSlot,
+		};
+		setActivity([...activity, newEntry]);
+		onChange({ target: { id: 'programFlow', value: [...activity, newEntry] } });
 		setNewActivity('');
 		setNewTimeSlot('');
+	  }
 	};
+  
+	const removeActivity = (index: number) => {
+	  const updatedActivity = [...activity];
+	  updatedActivity.splice(index, 1);
+	  setActivity(updatedActivity);
+	  onChange({ target: { id: 'programFlow', value: updatedActivity } });
+	};
+  
+	const toggleEdit = (index: number) => {
+	  const updatedActivity = [...activity];
+	  updatedActivity[index].isEditing = !updatedActivity[index].isEditing;
+	  setActivity(updatedActivity);
+	};
+  
+	const handleEdit = (index: number) => {
+	  const updatedActivity = [...activity];
+	  const newEditedActivity = newActivity || updatedActivity[index].originalActivity;
+	  const newEditedTimeSlot = newTimeSlot || updatedActivity[index].originalTimeSlot;
+	  updatedActivity[index].activityName = newEditedActivity;
+	  updatedActivity[index].timeSlot = newEditedTimeSlot;
+	  updatedActivity[index].isEditing = false;
+	  updatedActivity[index].originalActivity = newEditedActivity;
+	  updatedActivity[index].originalTimeSlot = newEditedTimeSlot;
+	  setActivity(updatedActivity);
+	  setNewActivity('');
+	  setNewTimeSlot('');
+	  onChange({ target: { id: 'programFlow', value: updatedActivity } });
+	};
+	
+	//console.log(activity);
 
-	useEffect(() => {
-		if (form.programFlow) {
-			const activities = form.programFlow.map((item: { activityName: string; timeSlot: string }) => ({
-				activityName: item.activityName,
-				timeSlot: item.timeSlot,
-				isEditing: false,
-				originalActivity: item.activityName,
-				originalTimeSlot: item.timeSlot,
-			}));
-			setActivity(activities);
-		}
-	}, [form.programFlow]);
-	console.log(activity);
 	return (
 		<div>
 			<Table>
