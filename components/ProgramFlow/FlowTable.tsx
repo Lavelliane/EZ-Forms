@@ -82,21 +82,6 @@ export function FlowTable({ onChange, form }: FlowTableProps) {
 	  setNewTimeSlot('');
 	  onChange({ target: { id: 'programFlow', value: updatedActivity } });
 	};
-
-	useEffect(() => {
-		if (form.programFlow) {
-		  const activities = form.programFlow
-			.filter((item: { activityName: string; timeSlot: string }) => item.activityName && item.timeSlot)
-			.map((item: { activityName: string; timeSlot: string }) => ({
-			  activityName: item.activityName,
-			  timeSlot: item.timeSlot,
-			  isEditing: false,
-			  originalActivity: item.activityName,
-			  originalTimeSlot: item.timeSlot,
-			}));
-		  setActivity(activities);
-		}
-	  }, [form.programFlow]);
 	
 	//console.log(activity);
 
