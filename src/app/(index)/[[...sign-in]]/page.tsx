@@ -1,13 +1,17 @@
-import { SignIn, SignedIn } from '@clerk/nextjs';
-import LandingPage from '../../../../components/LandingPage';
+'use client';
+
+import { SignIn } from '@clerk/nextjs';
+import { useAuth } from '@clerk/clerk-react';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 export default function Page() {
+	const { isLoaded, userId } = useAuth();
+
 	return (
 		<div className='flex items-center justify-center h-screen'>
-			<SignedIn>
-				<LandingPage />
-			</SignedIn>
-			<SignIn />
+			{isLoaded && !userId && <SignIn />}
+			{isLoaded && userId && <Link href='/forms/form-1'>EZ Forms here we go!</Link>}
 		</div>
 	);
 }

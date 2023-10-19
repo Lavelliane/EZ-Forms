@@ -14,15 +14,30 @@ interface Activity {
 	originalTimeSlot: string;
 }
 
-interface CashFlowProps {
+interface FlowTableProps {
 	onChange: (e: any) => void;
 	form: IProgramFlow;
 }
 
-export function FlowTable({ onChange, form }: CashFlowProps) {
+export function FlowTable({ onChange, form }: FlowTableProps) {
 	const [activity, setActivity] = useState<Activity[]>([]);
 	const [newActivity, setNewActivity] = useState('');
 	const [newTimeSlot, setNewTimeSlot] = useState('');
+
+	useEffect(() => {
+		if (form.programFlow) {
+			const activities = form.programFlow
+				.filter((item: { activityName: string; timeSlot: string }) => item.activityName && item.timeSlot)
+				.map((item: { activityName: string; timeSlot: string }) => ({
+					activityName: item.activityName,
+					timeSlot: item.timeSlot,
+					isEditing: false,
+					originalActivity: item.activityName,
+					originalTimeSlot: item.timeSlot,
+				}));
+			setActivity(activities);
+		}
+	}, [form.programFlow]);
 
 	const addActivity = () => {
 		if (newActivity && newTimeSlot) {
@@ -44,6 +59,7 @@ export function FlowTable({ onChange, form }: CashFlowProps) {
 		const updatedActivity = [...activity];
 		updatedActivity.splice(index, 1);
 		setActivity(updatedActivity);
+		onChange({ target: { id: 'programFlow', value: updatedActivity } });
 	};
 
 	const toggleEdit = (index: number) => {
@@ -64,33 +80,23 @@ export function FlowTable({ onChange, form }: CashFlowProps) {
 		setActivity(updatedActivity);
 		setNewActivity('');
 		setNewTimeSlot('');
+		onChange({ target: { id: 'programFlow', value: updatedActivity } });
 	};
 
-	useEffect(() => {
-		if (form.programFlow) {
-			const activities = form.programFlow.map((item: { activityName: string; timeSlot: string }) => ({
-				activityName: item.activityName,
-				timeSlot: item.timeSlot,
-				isEditing: false,
-				originalActivity: item.activityName,
-				originalTimeSlot: item.timeSlot,
-			}));
-			setActivity(activities);
-		}
-	}, [form.programFlow]);
-	console.log(activity);
+	//console.log(activity);
+
 	return (
 		<div>
 			<Table>
 				<TableHeader>
-					<TableRow>
+					<TableRow className='sm:text-sm text-xs'>
 						<TableHead>Activity Name</TableHead>
 						<TableHead>Time Slot</TableHead>
 						<TableHead className='justify-end flex items-center'>Actions</TableHead>
 					</TableRow>
 				</TableHeader>
 
-				<TableBody>
+				<TableBody className=' sm:text-sm text-xs'>
 					{activity.map((ac, index) => (
 						<TableRow key={`${ac.activityName}-${ac.timeSlot}`}>
 							<TableCell className='font-medium'>
@@ -100,6 +106,7 @@ export function FlowTable({ onChange, form }: CashFlowProps) {
 										value={newActivity || ac.originalActivity}
 										onChange={(e) => setNewActivity(e.target.value)}
 										placeholder={ac.originalActivity}
+										className=' sm:text-sm text-xs mx-0'
 									/>
 								) : (
 									ac.activityName
@@ -112,6 +119,7 @@ export function FlowTable({ onChange, form }: CashFlowProps) {
 										value={newTimeSlot || ac.originalTimeSlot}
 										onChange={(e) => setNewTimeSlot(e.target.value)}
 										placeholder={ac.originalTimeSlot}
+										className=' sm:text-sm text-xs mx-0'
 									/>
 								) : (
 									ac.timeSlot
@@ -154,6 +162,7 @@ export function FlowTable({ onChange, form }: CashFlowProps) {
 								onChange={(e) => setNewActivity(e.target.value)}
 								placeholder='Activity Name'
 								disabled={activity.some((ac) => ac.isEditing)}
+								className=' sm:text-sm text-xs mx-0'
 							/>
 						</TableCell>
 						<TableCell>
@@ -163,6 +172,7 @@ export function FlowTable({ onChange, form }: CashFlowProps) {
 								onChange={(e) => setNewTimeSlot(e.target.value)}
 								placeholder='Time Slot'
 								disabled={activity.some((ac) => ac.isEditing)}
+								className=' sm:text-sm text-xs mx-0'
 							/>
 						</TableCell>
 						<TableCell className='justify-end flex items-center'>

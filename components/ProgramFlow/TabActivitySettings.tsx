@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -5,18 +6,30 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ta } from 'date-fns/locale';
 
 interface TabActivitySettingsProps {
 	onChange: (event: any) => void;
 }
 
 export function TabActivitySettings({ onChange }: TabActivitySettingsProps) {
+	const [tabIncludes, setTabIncludes] = useState<string[]>([]);
+
 	const handleTabChange: (selectedTab: string) => void = (selectedTab: string) => {
 		onChange({ target: { id: 'modeOfPresentation', value: selectedTab } });
 	};
 
+	const onCheckedChange = (event: any) => {
+		const { id, checked } = event.target.id;
+		if (checked) {
+			setTabIncludes([...tabIncludes, id]);
+		} else {
+			setTabIncludes(tabIncludes.filter((item) => item !== id));
+		}
+	};
+	console.log(tabIncludes);
 	return (
-		<Tabs defaultValue='face-to-face' className='w-[400px]' onValueChange={handleTabChange}>
+		<Tabs defaultValue='face-to-face' className='md:w-[400px] w-full' onValueChange={handleTabChange}>
 			<TabsList className='grid w-full grid-cols-2'>
 				<TabsTrigger value='face-to-face'>Face-to-Face</TabsTrigger>
 				<TabsTrigger value='online'>Online</TabsTrigger>
@@ -30,44 +43,42 @@ export function TabActivitySettings({ onChange }: TabActivitySettingsProps) {
 						</CardDescription>
 					</CardHeader>
 					<CardContent className='space-y-2 '>
-						<div className='flex flex-row w-full justify-around'>
-							<div className='flex flex-col gap-3 justify-items-start w-1/2 pr-5'>
+						<div className='flex flex-row w-full justify-between items-center h-32'>
+							<div className='flex flex-col gap-3 justify-items-start w-1/2'>
 								<span className='flex items-center gap-2'>
-									<Switch />
-									<Label htmlFor='name'>Demos</Label>
+									<Switch id='demos' onCheckedChange={onCheckedChange} />
+									<Label htmlFor='demos'>Demos</Label>
 								</span>
 								<span className='flex items-center gap-2'>
-									<Switch />
-									<Label htmlFor='name'>Hands-On</Label>
+									<Switch id='handsOn' onCheckedChange={onCheckedChange} />
+									<Label htmlFor='handsOn'>Hands-On</Label>
 								</span>
 								<span className='flex items-center gap-2'>
-									<Switch />
-									<Label htmlFor='name'>Q&A Session</Label>
+									<Switch id='qaSession' onCheckedChange={onCheckedChange} />
+									<Label htmlFor='qaSession'>Q&A Session</Label>
 								</span>
 								<span className='flex items-center gap-2'>
-									<Switch />
-									<Label htmlFor='name'>Attendance</Label>
+									<Switch id='attendance' onCheckedChange={onCheckedChange} />
+									<Label htmlFor='attendance'>Attendance</Label>
 								</span>
 							</div>
-							<div>
-								<Separator orientation='vertical' className='bg-slate-300' />
-							</div>
-							<div className='flex flex-col gap-3 justify-items-start w-1/2 pl-5'>
+							<Separator orientation='vertical' className='mx-2 bg-gray-500' />
+							<div className='flex flex-col gap-3 justify-items-start w-1/2'>
 								<span className='flex items-center gap-2'>
-									<Switch />
-									<Label htmlFor='name'>Games</Label>
+									<Switch id='games' onCheckedChange={onCheckedChange} />
+									<Label htmlFor='games'>Games</Label>
 								</span>
 								<span className='flex items-center gap-2'>
-									<Switch />
-									<Label htmlFor='name'>Quizzes</Label>
+									<Switch id='quizzes' onCheckedChange={onCheckedChange} />
+									<Label htmlFor='quizzes'>Quizzes</Label>
 								</span>
 								<span className='flex items-center gap-2'>
-									<Switch />
-									<Label htmlFor='name'>Guest Speakers</Label>
+									<Switch id='guestSpeaker' onCheckedChange={onCheckedChange} />
+									<Label htmlFor='guestSpeaker'>Guest Speakers</Label>
 								</span>
 								<span className='flex items-center gap-2'>
-									<Switch />
-									<Label htmlFor='name'>Group Activities</Label>
+									<Switch id='groupActivities' onCheckedChange={onCheckedChange} />
+									<Label htmlFor='groupActivities'>Group Activities</Label>
 								</span>
 							</div>
 						</div>
@@ -86,16 +97,16 @@ export function TabActivitySettings({ onChange }: TabActivitySettingsProps) {
 						<div className='flex flex-row w-full justify-around'>
 							<div className='flex flex-col gap-3 justify-items-start w-1/2 pr-5'>
 								<span className='flex items-center gap-2'>
-									<Switch />
-									<Label htmlFor='name'>Demos</Label>
+									<Switch id='demos' onCheckedChange={onCheckedChange} />
+									<Label htmlFor='demos'>Demos</Label>
 								</span>
 								<span className='flex items-center gap-2'>
-									<Switch />
-									<Label htmlFor='name'>Q&A Session</Label>
+									<Switch id='qaSession' onCheckedChange={onCheckedChange} />
+									<Label htmlFor='qaSession'>Q&A Session</Label>
 								</span>
 								<span className='flex items-center gap-2'>
-									<Switch />
-									<Label htmlFor='name'>Group Activities</Label>
+									<Switch id='groupActivities' onCheckedChange={onCheckedChange} />
+									<Label htmlFor='groupActivities'>Group Activities</Label>
 								</span>
 							</div>
 							<div>
@@ -103,12 +114,12 @@ export function TabActivitySettings({ onChange }: TabActivitySettingsProps) {
 							</div>
 							<div className='flex flex-col gap-3 justify-items-start w-1/2 pl-5'>
 								<span className='flex items-center gap-2'>
-									<Switch />
-									<Label htmlFor='name'>Quizzes</Label>
+									<Switch id='quizzes' onCheckedChange={onCheckedChange} />
+									<Label htmlFor='quizzes'>Quizzes</Label>
 								</span>
 								<span className='flex items-center gap-2'>
-									<Switch />
-									<Label htmlFor='name'>Guest Speakers</Label>
+									<Switch id='guestSpeaker' onCheckedChange={onCheckedChange} />
+									<Label htmlFor='guestSpeaker'>Guest Speakers</Label>
 								</span>
 							</div>
 						</div>

@@ -24,6 +24,7 @@ import TabActivitySettings from './TabActivitySettings';
 import SheetToPDF from './SheetToPDF';
 import getProgramFlowFields from '@/mutations/getProgramFlowFields';
 import { FlowTable } from './FlowTable';
+import { start } from 'repl';
 
 const ProgramFlow = () => {
 	const [form, setForm] = useState<IProgramFlow>(defaultProgramFlow);
@@ -33,7 +34,6 @@ const ProgramFlow = () => {
 	const [date, setDate] = useState<Date>();
 
 	const [isCheckedPosition, setIsCheckedPosition] = useState(false);
-	const [presentationMode, setPresentationMode] = useState<any>('');
 	const [selectedPosition, setSelectedPosition] = useState<string>('');
 	const [selectedProficiencyLevel, setSelectedProficiencyLevel] = useState<number>(3);
 
@@ -100,7 +100,9 @@ const ProgramFlow = () => {
 	useEffect(() => {
 		setForm({ ...form, ['time']: startTime + ' - ' + endTime });
 	}, [startTime, endTime]);
+
 	console.log(form);
+
 	return (
 		<Card className='flex flex-grow flex-col bg-white hover:shadow-md transition-shadow w-fit h-fit z-10 py-4 sm:px-8 px-0'>
 			<CardHeader className='text-center'>
@@ -250,20 +252,19 @@ const ProgramFlow = () => {
 							</span>
 							<TabActivitySettings onChange={onChange} />
 
-							<div className='w-full flex flex-col gap-2 items-center -translate-x-[78px]'>
+							<div className='w-full flex flex-col gap-2 items-center translate-x-0 md:-translate-x-[78px]'>
 								<div className='flex'>
-									{!form.eventName || !form.time ? (
+									{!form.eventName || startTime === endTime ? (
 										<p className=' text-red-500 text-xs'>Activity name, start and end times required.</p>
 									) : (
 										''
 									)}
 								</div>
-								<div className='-translate-x-[70px]'>
+								<div className='translate-x-0 md:-translate-x-[70px]'>
 									<Button
-										disabled={!form.eventName || !form.modeOfPresentation || !form.time || isLoading}
+										disabled={!form.eventName || !form.modeOfPresentation || startTime === endTime || isLoading}
 										type='submit'
 										onClick={async (e) => {
-											setPresentationMode('faceToFace');
 											await generateProgramFlow({
 												eventName: form.eventName,
 												type: form.modeOfPresentation,
@@ -289,6 +290,8 @@ const ProgramFlow = () => {
 					<FlowTable onChange={onChange} form={form} />
 				</div>
 				<Separator className='my-2' />
+
+				{/* ---------- Footer Section ---------- */}
 				<div className='flex flex-col items-center justify-evenly w-full my-4 text-justify'>
 					<p className='text-xs'>
 						<span className='font-semibold'>DATA PRIVACY CONSENT:</span> I give my consent to the University of San
