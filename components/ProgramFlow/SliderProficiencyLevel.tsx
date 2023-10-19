@@ -66,9 +66,9 @@ export function SliderProficiencyLevel({
           className="cursor-pointer"
         />
       </div>
-      <div className="flex flex-col w-full items-center justify-center">
-        <Card className="hover:shadow-md transition-shadow w-full">
-          <CardContent className="flex flex-col gap-2 items-center mt-6">
+      <div className="flex flex-col w-full h-fit items-center justify-center">
+        <Card className="hover:shadow-md transition-shadow w-full min-h-[272px]">
+          <CardContent className="flex flex-col gap-4 items-center mt-6">
             <Label htmlFor="proficiencyLevel" className="font-bold text-lg">
               <span className="bg-gradient-to-r text-transparent from-purple-500 to-blue-500 bg-clip-text">
                 {proficiencyLevels[selectedLevelInternal - 1].label}
@@ -76,7 +76,7 @@ export function SliderProficiencyLevel({
             </Label>
             <Image
               src={require(`../../public/assets/wiz-${proficiencyLevels[selectedLevelInternal - 1].label.toLowerCase()}.svg`)}
-              height={250}
+              height={250} width={250}
               alt="Where did the wizard go?"
             />
           </CardContent>

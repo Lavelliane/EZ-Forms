@@ -23,80 +23,80 @@ export function FlowTable({ onChange, form }: FlowTableProps) {
 	const [activity, setActivity] = useState<Activity[]>([]);
 	const [newActivity, setNewActivity] = useState('');
 	const [newTimeSlot, setNewTimeSlot] = useState('');
-  
+
 	useEffect(() => {
-	  if (form.programFlow) {
-		const activities = form.programFlow
-		  .filter((item: { activityName: string; timeSlot: string }) => item.activityName && item.timeSlot)
-		  .map((item: { activityName: string; timeSlot: string }) => ({
-			activityName: item.activityName,
-			timeSlot: item.timeSlot,
-			isEditing: false,
-			originalActivity: item.activityName,
-			originalTimeSlot: item.timeSlot,
-		  }));
-		setActivity(activities);
-	  }
+		if (form.programFlow) {
+			const activities = form.programFlow
+				.filter((item: { activityName: string; timeSlot: string }) => item.activityName && item.timeSlot)
+				.map((item: { activityName: string; timeSlot: string }) => ({
+					activityName: item.activityName,
+					timeSlot: item.timeSlot,
+					isEditing: false,
+					originalActivity: item.activityName,
+					originalTimeSlot: item.timeSlot,
+				}));
+			setActivity(activities);
+		}
 	}, [form.programFlow]);
-  
+
 	const addActivity = () => {
-	  if (newActivity && newTimeSlot) {
-		const newEntry: Activity = {
-		  activityName: newActivity,
-		  timeSlot: newTimeSlot,
-		  isEditing: false,
-		  originalActivity: newActivity,
-		  originalTimeSlot: newTimeSlot,
-		};
-		setActivity([...activity, newEntry]);
-		onChange({ target: { id: 'programFlow', value: [...activity, newEntry] } });
+		if (newActivity && newTimeSlot) {
+			const newEntry: Activity = {
+				activityName: newActivity,
+				timeSlot: newTimeSlot,
+				isEditing: false,
+				originalActivity: newActivity,
+				originalTimeSlot: newTimeSlot,
+			};
+			setActivity([...activity, newEntry]);
+			onChange({ target: { id: 'programFlow', value: [...activity, newEntry] } });
+			setNewActivity('');
+			setNewTimeSlot('');
+		}
+	};
+
+	const removeActivity = (index: number) => {
+		const updatedActivity = [...activity];
+		updatedActivity.splice(index, 1);
+		setActivity(updatedActivity);
+		onChange({ target: { id: 'programFlow', value: updatedActivity } });
+	};
+
+	const toggleEdit = (index: number) => {
+		const updatedActivity = [...activity];
+		updatedActivity[index].isEditing = !updatedActivity[index].isEditing;
+		setActivity(updatedActivity);
+	};
+
+	const handleEdit = (index: number) => {
+		const updatedActivity = [...activity];
+		const newEditedActivity = newActivity || updatedActivity[index].originalActivity;
+		const newEditedTimeSlot = newTimeSlot || updatedActivity[index].originalTimeSlot;
+		updatedActivity[index].activityName = newEditedActivity;
+		updatedActivity[index].timeSlot = newEditedTimeSlot;
+		updatedActivity[index].isEditing = false;
+		updatedActivity[index].originalActivity = newEditedActivity;
+		updatedActivity[index].originalTimeSlot = newEditedTimeSlot;
+		setActivity(updatedActivity);
 		setNewActivity('');
 		setNewTimeSlot('');
-	  }
+		onChange({ target: { id: 'programFlow', value: updatedActivity } });
 	};
-  
-	const removeActivity = (index: number) => {
-	  const updatedActivity = [...activity];
-	  updatedActivity.splice(index, 1);
-	  setActivity(updatedActivity);
-	  onChange({ target: { id: 'programFlow', value: updatedActivity } });
-	};
-  
-	const toggleEdit = (index: number) => {
-	  const updatedActivity = [...activity];
-	  updatedActivity[index].isEditing = !updatedActivity[index].isEditing;
-	  setActivity(updatedActivity);
-	};
-  
-	const handleEdit = (index: number) => {
-	  const updatedActivity = [...activity];
-	  const newEditedActivity = newActivity || updatedActivity[index].originalActivity;
-	  const newEditedTimeSlot = newTimeSlot || updatedActivity[index].originalTimeSlot;
-	  updatedActivity[index].activityName = newEditedActivity;
-	  updatedActivity[index].timeSlot = newEditedTimeSlot;
-	  updatedActivity[index].isEditing = false;
-	  updatedActivity[index].originalActivity = newEditedActivity;
-	  updatedActivity[index].originalTimeSlot = newEditedTimeSlot;
-	  setActivity(updatedActivity);
-	  setNewActivity('');
-	  setNewTimeSlot('');
-	  onChange({ target: { id: 'programFlow', value: updatedActivity } });
-	};
-	
+
 	//console.log(activity);
 
 	return (
 		<div>
 			<Table>
 				<TableHeader>
-					<TableRow>
+					<TableRow className='sm:text-sm text-xs'>
 						<TableHead>Activity Name</TableHead>
 						<TableHead>Time Slot</TableHead>
 						<TableHead className='justify-end flex items-center'>Actions</TableHead>
 					</TableRow>
 				</TableHeader>
 
-				<TableBody>
+				<TableBody className=' sm:text-sm text-xs'>
 					{activity.map((ac, index) => (
 						<TableRow key={`${ac.activityName}-${ac.timeSlot}`}>
 							<TableCell className='font-medium'>
@@ -106,6 +106,7 @@ export function FlowTable({ onChange, form }: FlowTableProps) {
 										value={newActivity || ac.originalActivity}
 										onChange={(e) => setNewActivity(e.target.value)}
 										placeholder={ac.originalActivity}
+										className=' sm:text-sm text-xs mx-0'
 									/>
 								) : (
 									ac.activityName
@@ -118,6 +119,7 @@ export function FlowTable({ onChange, form }: FlowTableProps) {
 										value={newTimeSlot || ac.originalTimeSlot}
 										onChange={(e) => setNewTimeSlot(e.target.value)}
 										placeholder={ac.originalTimeSlot}
+										className=' sm:text-sm text-xs mx-0'
 									/>
 								) : (
 									ac.timeSlot
@@ -160,6 +162,7 @@ export function FlowTable({ onChange, form }: FlowTableProps) {
 								onChange={(e) => setNewActivity(e.target.value)}
 								placeholder='Activity Name'
 								disabled={activity.some((ac) => ac.isEditing)}
+								className=' sm:text-sm text-xs mx-0'
 							/>
 						</TableCell>
 						<TableCell>
@@ -169,6 +172,7 @@ export function FlowTable({ onChange, form }: FlowTableProps) {
 								onChange={(e) => setNewTimeSlot(e.target.value)}
 								placeholder='Time Slot'
 								disabled={activity.some((ac) => ac.isEditing)}
+								className=' sm:text-sm text-xs mx-0'
 							/>
 						</TableCell>
 						<TableCell className='justify-end flex items-center'>

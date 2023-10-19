@@ -12,14 +12,7 @@ export interface IProgramFlow {
 	proficiencyLevel: string;
 	modeOfPresentation: string;
 	programFlow: [IProgramFlowItem];
-	demos: boolean;
-	handsOn: boolean;
-	qaSession: boolean;
-	attendance: boolean;
-	games: boolean;
-	quizzes: boolean;
-	guestSpeakers: boolean;
-	groupActivities: boolean;
+	activitySettings: string;
 }
 
 export interface IProgramFlowItem {
