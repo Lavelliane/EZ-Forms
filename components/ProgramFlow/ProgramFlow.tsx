@@ -268,6 +268,8 @@ const ProgramFlow = () => {
 											await generateProgramFlow({
 												eventName: form.eventName,
 												type: form.modeOfPresentation,
+												activitySettings: form.activitySettings,
+												proficiencyLevel: form.proficiencyLevel,
 												startTime: form.time.split(' - ')[0],
 												endTime: form.time.split(' - ')[1],
 											});
