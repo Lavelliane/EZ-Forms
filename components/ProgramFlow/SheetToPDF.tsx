@@ -29,7 +29,7 @@ const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
 		setLoader(true);
 		const input = pdfRef.current;
 
-		html2canvas(input as HTMLDivElement, { scale: 2 }).then((canvas) => {
+		html2canvas(input as HTMLDivElement, { scale: 4 }).then((canvas) => {
 			const imgData = canvas.toDataURL('image/png');
 			const pdf = new jsPDF('p', 'mm', 'a4', true);
 

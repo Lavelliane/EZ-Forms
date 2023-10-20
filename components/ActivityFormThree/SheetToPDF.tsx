@@ -27,7 +27,6 @@ const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
 	const pdfRefs = [useRef<HTMLDivElement>(null), useRef<HTMLDivElement>(null)];
 	const [loader, setLoader] = React.useState(false);
 
-	const totalPages = pdfRefs.length; // Total number of pages
 	const downloadPDF = () => {
 		setLoader(true);
 
@@ -52,7 +51,7 @@ const SheetToPDF = ({ formContent }: SheetToPDFProps) => {
 				return;
 			}
 
-			html2canvas(input, { scale: 2 }).then((canvas) => {
+			html2canvas(input, { scale: 4 }).then((canvas) => {
 				const imgData = canvas.toDataURL('image/png');
 
 				const pdfWidth = pdf.internal.pageSize.getWidth();
